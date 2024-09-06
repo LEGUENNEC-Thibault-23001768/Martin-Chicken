@@ -1,0 +1,87 @@
+USE `martin-chicken_db`;
+
+DROP TABLE IF EXISTS STRUCTURE;
+DROP TABLE IF EXISTS TENRAC;
+DROP TABLE IF EXISTS REPAS;
+DROP TABLE IF EXISTS PLAT;
+DROP TABLE IF EXISTS SAUCES;
+DROP TABLE IF EXISTS INGREDIENTS;
+
+CREATE TABLE IF NOT EXISTS STRUCTURE (
+    Id INT PRIMARY KEY,
+    Type ENUM('Ordre', 'Club'),
+    Nom VARCHAR(20),
+    Adresse VARCHAR(50)
+);
+
+CREATE TABLE IF NOT EXISTS TENRAC (
+    Id INT PRIMARY KEY,
+    Nom VARCHAR(20),
+    Email VARCHAR(50),
+    Numero VARCHAR(10),
+    Adresse VARCHAR(80),
+    Grade ENUM('Affilie', 'Sympathisant', 'Adhérent', 'Chevalier / Dame', 'Grand Chevalier / Haute Dame', 'Commandeur', 'Grand\'Croix'),
+    Rang ENUM('Novice', 'Compagnon'),
+    Titre ENUM('Philanthrope', 'Protecteur', 'Honorable'),
+    Dignite ENUM('Maitre', 'Grand Chancelier', 'Grand Maitre'),
+    Structure_Id INT,
+    FOREIGN KEY (Structure_Id) REFERENCES STRUCTURE(Id)
+);
+
+CREATE TABLE IF NOT EXISTS REPAS (
+    Id INT PRIMARY KEY,
+    Nom VARCHAR(50),
+    Datee DATE,
+    Adresse VARCHAR(50),
+    Presence BOOLEAN
+);
+
+CREATE TABLE IF NOT EXISTS PLAT (
+    Id INT PRIMARY KEY,
+    Id_Repas INT,
+    Nom VARCHAR(30),
+    FOREIGN KEY (Id_Repas) REFERENCES REPAS(Id) ON DELETE CASCADE
+);
+
+CREATE TABLE INGREDIENTS (
+    Id INT AUTO_INCREMENT PRIMARY KEY,
+    Nom VARCHAR(255) NOT NULL,
+    Est_legume BOOLEAN NOT NULL DEFAULT FALSE
+);
+
+CREATE TABLE SAUCES (
+    Id INT AUTO_INCREMENT PRIMARY KEY,
+    Nom VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE REPAS_PARTICIPANT (
+    Repas_id INT,
+    Tenrac_id INT,
+    PRIMARY KEY (Repas_id, Tenrac_id),
+    FOREIGN KEY (Repas_id) REFERENCES REPAS(Id) ON DELETE CASCADE,
+    FOREIGN KEY (Tenrac_id) REFERENCES TENRAC(Id) ON DELETE CASCADE
+);
+
+CREATE TABLE PLATS_INGREDIENTS (
+    Id_plat INT,
+    Id_ingredient INT,
+    PRIMARY KEY (Id_plat, Id_ingredient),
+    FOREIGN KEY (Id_plat) REFERENCES PLAT(Id) ON DELETE CASCADE,
+    FOREIGN KEY (Id_ingredient) REFERENCES INGREDIENTS(Id) ON DELETE CASCADE
+);
+
+CREATE TABLE PLATS_SAUCES (
+    Id_plat INT,
+    Id_sauce INT,
+    PRIMARY KEY (Id_plat, Id_sauce),
+    FOREIGN KEY (Id_plat) REFERENCES PLAT(Id) ON DELETE CASCADE,
+    FOREIGN KEY (Id_sauce) REFERENCES SAUCES(Id) ON DELETE CASCADE
+);
+
+CREATE TABLE AUTHENTIFICATION (
+    Id INT AUTO_INCREMENT PRIMARY KEY,
+    Id_Tenrac INT UNIQUE,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    FOREIGN KEY (Id_Tenrac) REFERENCES TENRAC(Id) ON DELETE CASCADE
+);
