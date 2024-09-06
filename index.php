@@ -1,20 +1,11 @@
 <?php
+	include "database.php";
 
-	$db_addr = "mysql-martin-chicken.alwaysdata.net";
-	$db_login = "374927";
-	$db_pass = "lechatrouge";
-	$db_name = "martin-chicken_db";
+	$conn = Database::getInstance();
 
+	//var_dump($conn);
 
-	try {
-		$conn = new mysqli($db_addr, $db_login, $db_pass, $db_name);
-	} catch (mysqli_sql_exception $e) {
-		die("". $e->getMessage());
-	}
-
-	var_dump($conn);
-
-	$sql = "SHOW TABLES FROM `" . $db_name . "`";
+	$sql = "SHOW TABLES FROM `" . DB_NAME . "`";
 	
 	$result = $conn->query($sql);
 
@@ -23,10 +14,14 @@
 	}
 
 	while ($row = $result->fetch_row()) {
-		var_dump($row);
+		//var_dump($row);
 		//echo "- {$row[0]}\n </br>";
 	}
 
 	$result->close();
 	$conn->close();
+
+	phpinfo();
+	var_dump($_SERVER);
+	
 ?>
