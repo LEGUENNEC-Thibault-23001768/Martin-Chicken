@@ -1,87 +1,106 @@
 USE `martin-chicken_db`;
 
+-- Supp table 
 DROP TABLE IF EXISTS STRUCTURE;
 DROP TABLE IF EXISTS TENRAC;
 DROP TABLE IF EXISTS REPAS;
 DROP TABLE IF EXISTS PLAT;
 DROP TABLE IF EXISTS SAUCES;
 DROP TABLE IF EXISTS INGREDIENTS;
+DROP TABLE IF EXISTS REPAS_PARTICIPANT;
+DROP TABLE IF EXISTS PLATS_INGREDIENTS;
+DROP TABLE IF EXISTS PLATS_SAUCES;
+DROP TABLE IF EXISTS AUTHENTIFICATION;
 
+-- Création des table
+
+-- Table STRUCTURE (Ordre et clubs)
 CREATE TABLE IF NOT EXISTS STRUCTURE (
-    Id INT PRIMARY KEY,
-    Type ENUM('Ordre', 'Club'),
-    Nom VARCHAR(20),
-    Adresse VARCHAR(50)
+    Id INT PRIMARY KEY AUTO_INCREMENT,   -- Ajout de AUTO_INCREMENT pour faciliter l'ajout
+    Type ENUM('Ordre', 'Club') NOT NULL,
+    Nom VARCHAR(50) NOT NULL,            
+    Adresse VARCHAR(255) NOT NULL        
 );
 
+-- Table TENRAC (membres)
 CREATE TABLE IF NOT EXISTS TENRAC (
-    Id INT PRIMARY KEY,
-    Nom VARCHAR(20),
-    Email VARCHAR(50),
-    Numero VARCHAR(10),
-    Adresse VARCHAR(80),
-    Grade ENUM('Affilie', 'Sympathisant', 'Adhérent', 'Chevalier / Dame', 'Grand Chevalier / Haute Dame', 'Commandeur', 'Grand\'Croix'),
+    Id INT PRIMARY KEY AUTO_INCREMENT,   -- Ajout de AUTO_INCREMENT pour faciliter l'ajout
+    Code_personnel VARCHAR(20) UNIQUE NOT NULL, -- Nouveau champ pour le code personnel unique des membres
+    Nom VARCHAR(50) NOT NULL,           
+    Email VARCHAR(100) NOT NULL,         
+    Numero VARCHAR(15),                  
+    Adresse VARCHAR(255),                
+    Grade ENUM('Affilié', 'Sympathisant', 'Adhérent', 'Chevalier / Dame', 'Grand Chevalier / Haute Dame', 'Commandeur', 'Grand\'Croix') NOT NULL,
     Rang ENUM('Novice', 'Compagnon'),
     Titre ENUM('Philanthrope', 'Protecteur', 'Honorable'),
     Dignite ENUM('Maitre', 'Grand Chancelier', 'Grand Maitre'),
     Structure_Id INT,
-    FOREIGN KEY (Structure_Id) REFERENCES STRUCTURE(Id)
+    FOREIGN KEY (Structure_Id) REFERENCES STRUCTURE(Id) ON DELETE SET NULL -- Modification de la contrainte : si la structure est supprimé, on met la valeur a NULL
 );
 
+-- Table REPAS
 CREATE TABLE IF NOT EXISTS REPAS (
-    Id INT PRIMARY KEY,
-    Nom VARCHAR(50),
-    Datee DATE,
-    Adresse VARCHAR(50),
-    Presence BOOLEAN
+    Id INT PRIMARY KEY AUTO_INCREMENT,   -- Ajout de AUTO_INCREMENT pour faciliter l'ajout
+    Nom VARCHAR(100) NOT NULL,           
+    Datee DATE NOT NULL,
+    Adresse VARCHAR(255) NOT NULL,       
+    Presence BOOLEAN NOT NULL DEFAULT FALSE
 );
 
+-- Table PLAT
 CREATE TABLE IF NOT EXISTS PLAT (
-    Id INT PRIMARY KEY,
-    Id_Repas INT,
-    Nom VARCHAR(30),
-    FOREIGN KEY (Id_Repas) REFERENCES REPAS(Id) ON DELETE CASCADE
+    Id INT PRIMARY KEY AUTO_INCREMENT,   -- Ajout de AUTO_INCREMENT pour faciliter l'ajout
+    Repas_Id INT NOT NULL,
+    Nom VARCHAR(100) NOT NULL,           
+    FOREIGN KEY (Repas_Id) REFERENCES REPAS(Id) ON DELETE CASCADE -- Suppression en cascade si le repas est supprimé
 );
 
-CREATE TABLE INGREDIENTS (
-    Id INT AUTO_INCREMENT PRIMARY KEY,
-    Nom VARCHAR(255) NOT NULL,
-    Est_legume BOOLEAN NOT NULL DEFAULT FALSE
+-- Table INGREDIENTS (avec gestion des légumes)
+CREATE TABLE IF NOT EXISTS INGREDIENTS (
+    Id INT PRIMARY KEY AUTO_INCREMENT,   -- Ajout de AUTO_INCREMENT pour faciliter l'ajout
+    Nom VARCHAR(100) NOT NULL,           
+    Est_legume BOOLEAN NOT NULL DEFAULT FALSE -- Champ pour spécifier si l'ingrédient est un légume
 );
 
-CREATE TABLE SAUCES (
-    Id INT AUTO_INCREMENT PRIMARY KEY,
-    Nom VARCHAR(255) NOT NULL
+-- Table SAUCES
+CREATE TABLE IF NOT EXISTS SAUCES (
+    Id INT PRIMARY KEY AUTO_INCREMENT,   -- Ajout de AUTO_INCREMENT pour faciliter l'ajout
+    Nom VARCHAR(100) NOT NULL            
 );
 
-CREATE TABLE REPAS_PARTICIPANT (
-    Repas_id INT,
-    Tenrac_id INT,
-    PRIMARY KEY (Repas_id, Tenrac_id),
-    FOREIGN KEY (Repas_id) REFERENCES REPAS(Id) ON DELETE CASCADE,
-    FOREIGN KEY (Tenrac_id) REFERENCES TENRAC(Id) ON DELETE CASCADE
+-- Table de participation aux repas (relation N:N entre TENRAC et REPAS)
+CREATE TABLE IF NOT EXISTS REPAS_PARTICIPANT (
+    Repas_Id INT NOT NULL,
+    Tenrac_Id INT NOT NULL,
+    PRIMARY KEY (Repas_Id, Tenrac_Id),
+    FOREIGN KEY (Repas_Id) REFERENCES REPAS(Id) ON DELETE CASCADE, -- Suppression en cascade
+    FOREIGN KEY (Tenrac_Id) REFERENCES TENRAC(Id) ON DELETE CASCADE -- Suppression en cascade
 );
 
-CREATE TABLE PLATS_INGREDIENTS (
-    Id_plat INT,
-    Id_ingredient INT,
-    PRIMARY KEY (Id_plat, Id_ingredient),
-    FOREIGN KEY (Id_plat) REFERENCES PLAT(Id) ON DELETE CASCADE,
-    FOREIGN KEY (Id_ingredient) REFERENCES INGREDIENTS(Id) ON DELETE CASCADE
+-- Table de relation entre plats et ingrédients (relation N:N)
+CREATE TABLE IF NOT EXISTS PLATS_INGREDIENTS (
+    Plat_Id INT NOT NULL,
+    Ingredient_Id INT NOT NULL,
+    PRIMARY KEY (Plat_Id, Ingredient_Id),
+    FOREIGN KEY (Plat_Id) REFERENCES PLAT(Id) ON DELETE CASCADE,   -- Suppression en cascade
+    FOREIGN KEY (Ingredient_Id) REFERENCES INGREDIENTS(Id) ON DELETE CASCADE -- Suppression en cascade
 );
 
-CREATE TABLE PLATS_SAUCES (
-    Id_plat INT,
-    Id_sauce INT,
-    PRIMARY KEY (Id_plat, Id_sauce),
-    FOREIGN KEY (Id_plat) REFERENCES PLAT(Id) ON DELETE CASCADE,
-    FOREIGN KEY (Id_sauce) REFERENCES SAUCES(Id) ON DELETE CASCADE
+-- Table de relation entre plats et sauces (relation N:N)
+CREATE TABLE IF NOT EXISTS PLATS_SAUCES (
+    Plat_Id INT NOT NULL,
+    Sauce_Id INT NOT NULL,
+    PRIMARY KEY (Plat_Id, Sauce_Id),
+    FOREIGN KEY (Plat_Id) REFERENCES PLAT(Id) ON DELETE CASCADE,   -- Suppression en cascade
+    FOREIGN KEY (Sauce_Id) REFERENCES SAUCES(Id) ON DELETE CASCADE -- Suppression en cascade
 );
 
-CREATE TABLE AUTHENTIFICATION (
-    Id INT AUTO_INCREMENT PRIMARY KEY,
-    Id_Tenrac INT UNIQUE,
-    username VARCHAR(50) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    FOREIGN KEY (Id_Tenrac) REFERENCES TENRAC(Id) ON DELETE CASCADE
+-- Table AUTHENTIFICATION pour gérer la connexion des utilisateurs
+CREATE TABLE IF NOT EXISTS AUTHENTIFICATION (
+    Id INT PRIMARY KEY AUTO_INCREMENT,   -- Ajout de AUTO_INCREMENT pour faciliter l'ajout
+    Tenrac_Id INT UNIQUE NOT NULL,        -- Chaque membre a un compte unique relier à la table TENRAC
+    Username VARCHAR(50) UNIQUE NOT NULL, -- Champ pour le nom d'utilisateur unique
+    Password VARCHAR(255) NOT NULL,       -- Mot de passe pour l'authentification
+    FOREIGN KEY (Tenrac_Id) REFERENCES TENRAC(Id) ON DELETE CASCADE -- Suppression en cascade si le membre est supprimé
 );
+
