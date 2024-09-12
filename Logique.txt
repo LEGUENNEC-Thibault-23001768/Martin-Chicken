@@ -1,0 +1,35 @@
+Structurre du projet  :
+
+src/: Le répertoire principal contenant la logique du site. data/: Contient les classes de gestion de la base de données, des superglobales, et d'autres structures de données. 
+
+database/: Gère la connexion à la base de données et les opérations CRUD avec une interface (AbstractTable).
+
+superGlobal/: Gère les variables superglobales comme GET, POST, SESSION et ENV avec des classes pour manipuler ces variables de manière sécurisée. 
+
+domain/: Définit les entités principales comme User et Credentials, ainsi que des traits comme IdTrait pour des identifiants uniques. 
+
+service/: Contient les services comme Authentification pour la gestion des utilisateurs (connexion, enregistrement). 
+
+exception/: Contient une classe d'exception personnalisée ActionException pour gérer les erreurs d'actions. 
+
+www/: Répertoire public pour les pages accessible par les utilisateurs. 
+
+view/: Contient les vues (pages HTML) comme la page d'accueil, la page de connexion, et la page d'erreur 404. .htaccess: Fichier de configuration Apache pour réécrire les URL. Autres fichiers PHP pour router les actions, gérer le chargement automatique des classes, etc.
+
+Gestion des données et base de données Connexion à la base de données : 
+La classe Connexion dans data\database gère la connexion à la base de données avec PDO. Elle inclut une méthode execute() pour exécuter des requêtes SQL préparée ou non. La connexion est établie de manière centralisée, et il y a des méthodes pour préparer et exécuter des requêtes avec des arguments facultatifs.
+
+Superglobales Gestion des superglobales : 
+Les superglobales comme $_GET, $_POST, $_SESSION, et $_ENV sont encapsulées dans des classes pour une gestion plus sécurisée et pour éviter les manipulations directes. Par exemple, la classe Post traite les requêtes POST, et la classe Session gère les sessions utilisateurs (avec des méthodes pour démarrer ou détruire une session). Chaque classe de superglobale inclut une méthode de sanitisation qui nettoie les données (suppression des espaces, conversion des caractères spéciaux).
+
+Gestion des utilisateurs Authentification des utilisateurs : 
+La classe Authentification permet d'enregistrer de nouveaux utilisateurs et de gérer la connexion. Lors de l'inscription, si l'utilisateur existe déjà (vérification via UserTable::exists()), une exception est lancée avec une redirection vers la page d'inscription. Pour la connexion, le mot de passe est haché avant de vérifier s'il correspond à celui en base de données.
+
+Architecture orientée objet Abstraction et modularité : 
+L'interface AbstractTable définit les opérations CRUD de base pour les entités (sélection, insertion, mise à jour, suppression). Les entités comme User utilisent le trait IdTrait pour ajouter un champ ID, ce qui permet de réutiliser cette fonctionnalité dans d'autres entités si nécessaire. Les utilisateurs sont représentés par la classe User, qui encapsule les informations d'identification dans la classe Credentials (nom et mot de passe).
+
+Gestion des exceptions Exceptions personnalisées : 
+La classe ActionException permet de gérer les erreurs spécifiques liées aux actions, avec un message d'erreur et une redirection en cas d'échec (par exemple, si l'utilisateur n'existe pas ou si le mot de passe est incorrect).
+
+Routing et affichage des pages Fichier .htaccess : 
+Utilisation de la réécriture d'URL avec Apache pour rediriger toutes les requêtes vers index.php en passant l'URL demandée comme paramètre path. Router des actions : Le fichier actionRouter.php contient la logique pour diriger les actions basées sur les données POST (comme register ou login). En cas d'erreur, il redirige vers la page d'inscription avec un message d'erreur. Affichage des vues : Le fichier principal (index.php) utilise la variable Get::$path pour inclure la bonne vue. S'il n'y a pas de fichier correspondant, la page 404 est incluse. La sortie HTML est ensuite traité et nettoyé par l'extension tidy pour garantir un code bien formaté.
