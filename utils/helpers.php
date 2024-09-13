@@ -15,9 +15,9 @@
     <body>
         <header id="tender">
             <input type="button" id="ouvreBtn" class="menuBouton"/>
-            <a id="ordre" class="headMenu" href="../modules/blog/controllers/views/<?php echo $pages[1]?>.php">l'<?php echo $pages[1]?></a>
+            <a id="ordre" class="headMenu" href="<?php echo $pages[1]?>">l'<?php echo $pages[1]?></a>
             <a id="logo" class="headMenu" href="#"><img src="../images/logo4.png"/></a>
-            <a id="compte" class="headMenu" href="views<?php echo $pages[2]?>.php"><img id="imgCompte" src="../images/compte1.png"></a>
+            <a id="compte" class="headMenu" href="<?php echo $pages[2]?>"><img id="imgCompte" src="../images/compte1.png"></a>
         </header>
         <nav class="menu" id="menu">
             <input type="button" id="fermeBtn" class="menuBouton">
