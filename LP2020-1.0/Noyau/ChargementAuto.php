@@ -38,6 +38,8 @@ final class ChargementAuto
             require $S_fichierACharger;
         }
     }
+
+    
 }
 
 // J'empile tout ce beau monde comme j'ai toujours appris à le faire...
@@ -45,3 +47,5 @@ spl_autoload_register('ChargementAuto::chargerClassesNoyau');
 spl_autoload_register('ChargementAuto::chargerClassesModele');
 spl_autoload_register('ChargementAuto::chargerClassesVue');
 spl_autoload_register('ChargementAuto::chargerClassesControleur');
+
+

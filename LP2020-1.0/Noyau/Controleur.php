@@ -11,7 +11,7 @@ final class Controleur
             // Nous avons pris le parti de préfixer tous les controleurs par "Controleur"
             $this->_A_urlDecortique['controleur'] = 'ControleurDefaut';
         } else {
-            $this->_A_urlDecortique['controleur'] = 'Controleur' . ucfirst($S_controleur);
+            $this->_A_urlDecortique['controleur'] = ucfirst($S_controleur);
         }
 
         if (empty($S_action)) {
@@ -24,6 +24,12 @@ final class Controleur
 
     }
     
+    protected function render($view, $data = []) {
+        extract($data);
+        require_once 'Vues/' . $view . '.php';
+    }
+
+
     // On exécute
     public function executer()
     {
