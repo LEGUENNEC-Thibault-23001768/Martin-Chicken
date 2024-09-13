@@ -68,21 +68,3 @@ interface Table
     public static function findById(int $id): ?array;
     public static function findAll(): array;
 }
-
-// Usage example
-try {
-    $tables = Connexion::execute("SHOW TABLES");
-
-    if ($tables) {
-        echo "Tables in the database '" . DB_NAME . "':<br>";
-        foreach ($tables as $table) {
-            echo reset($table) . "<br>";
-        }
-    } else {
-        echo "No tables found in the database '" . DB_NAME . "'.";
-    }
-} catch (Exception $e) {
-    echo "An error occurred: " . $e->getMessage();
-}
-
-$pipi = Connexion::execute("SELECT * FROM `AUTHENTIFICATION`");

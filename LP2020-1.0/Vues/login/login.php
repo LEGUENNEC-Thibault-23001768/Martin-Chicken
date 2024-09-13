@@ -8,7 +8,7 @@
 </head>
 <body>
     <h2>Login</h2>
-    <form action="index.php?action=login" method="POST">
+    <form action="index.php?ctrl=Login&action=login" method="POST">
         <label for="username">Username:</label>
         <input type="text" name="username" required><br>
 

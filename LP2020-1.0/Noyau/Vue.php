@@ -18,10 +18,10 @@ final class Vue
     {
         $S_fichier = Constantes::repertoireVues() . $S_localisation . '.php';
 
-            $A_vue = $A_parametres;
-            // Démarrage d'un sous-tampon
-            ob_start();
-            include $S_fichier; // c'est dans ce fichier que sera utilisé A_vue, la vue est inclue dans le sous-tampon
-            ob_end_flush();
+        $A_vue = $A_parametres;
+        // Démarrage d'un sous-tampon
+        ob_start();
+        include $S_fichier; // c'est dans ce fichier que sera utilisé A_vue, la vue est inclue dans le sous-tampon
+        ob_end_flush();
     }
 }

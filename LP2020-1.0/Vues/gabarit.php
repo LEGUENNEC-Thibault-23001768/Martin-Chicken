@@ -6,7 +6,7 @@
         <title>Gros caca</title>
     </head>
     <body>
-        <?php Vue::montrer('standard/entete'); ?>
+        <?php Vue::montrer('login/login'); ?>
         <?php echo $A_vue['body'] ?>
         <?php Vue::montrer('standard/pied'); ?>
 

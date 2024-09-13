@@ -1,25 +1,59 @@
 <?php
-namespace Modele;
 
-class AuthModel {
-    private $conn;
-    private $table = 'AUTHENTIFICATION';
+// Start the session at the beginning of your script
 
-    public function __construct($db) {
-        $this->conn = $db;
+class AuthModel
+{
+    private static string $table = 'AUTHENTIFICATION';
+
+    public static function register(string $username, string $email, string $password): void
+    {
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+        
+        $query = "INSERT INTO " . self::$table . " (username, email, password) VALUES (?, ?, ?)";
+        $result = Connexion::execute($query, [$username, $email, $hashedPassword]);
+
     }
 
-    public function login($username, $password) {
-        $query = "SELECT * FROM " . $this->table . " WHERE username = :username LIMIT 1";
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':username', $username);
-        $stmt->execute();
-        $user = $stmt->fetch(\PDO::FETCH_ASSOC);
+    public static function login(string $username, string $password): bool
+    {
+        $query = "SELECT * FROM " . self::$table . " WHERE username = ?";
+        $result = Connexion::execute($query, [$username]);
+        
+        if (count($result) === 1) {
+            $user = $result[0];
 
-        if ($user && password_verify($password, $user['password'])) {
-            return $user;
+            if ($user["password"] == $password) {
+            //if (password_verify($password, $user['password'])) {
+                // Set session variables
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['username'] = $user['username'];
+                return true;
+            }
         }
-
         return false;
     }
+
+    public static function logout(): void
+    {
+        // Unset all session variables
+        $_SESSION = array();
+
+        // Destroy the session
+        session_destroy();
+    }
+
+    public static function isLoggedIn(): bool
+    {
+        return isset($_SESSION['user_id']);
+    }
+
+    public static function getCurrentUser(): ?array
+    {
+        if (self::isLoggedIn()) {
+            return self::findById($_SESSION['user_id']);
+        }
+        return null;
+    }
+
 }

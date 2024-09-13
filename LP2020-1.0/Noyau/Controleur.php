@@ -9,9 +9,9 @@ final class Controleur
 
         if (empty($S_controleur)) {
             // Nous avons pris le parti de préfixer tous les controleurs par "Controleur"
-            $this->_A_urlDecortique['controleur'] = 'ControleurDefaut';
+            $this->_A_urlDecortique['controleur'] = 'LoginController';
         } else {
-            $this->_A_urlDecortique['controleur'] = ucfirst($S_controleur);
+            $this->_A_urlDecortique['controleur'] = ucfirst($S_controleur) . 'Controller';
         }
 
         if (empty($S_action)) {
