@@ -24,20 +24,20 @@ final class LoginController
         
         $result = $auth_model->login($username, $password);
 
+        var_dump($result);
         try {
 
             if (!$result) {
                 $_SESSION['login_error'] = "Mauvais nom d'utilisateur ou mot de passe";
-                header('Location: index.php?ctrl=Login');
+                //header('Location: index.php?ctrl=Login');
                 return;
             }
 
-            header('Location: index.php?ctrl=ZEBI'); // rediriger vers dashboard
+            //header('Location: index.php?ctrl=ZEBI'); // rediriger vers dashboard
 
 
         } catch (Exception $e) {
             $err = $e->getMessage();
-
             $_SESSION['login_error'] = $err;
             header('Location: index.php?ctrl=Login');
         }

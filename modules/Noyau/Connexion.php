@@ -65,7 +65,10 @@ class Connexion
     {
         self::connect();
 
+        
         try {
+            self::$connexion->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER);
+            
             if (is_null($args)) {
                 $statement = self::$connexion->query($query);
             } else {
