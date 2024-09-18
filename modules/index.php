@@ -4,11 +4,6 @@ session_save_path(__DIR__ . "/sessions");
 session_start();
 require 'Noyau/autoloader.php';
 
-/*
-    url pour notre premier test MVC Hello World,
-    nous n'avons pas d'action précisée on visera celle par défaut
-    index.php?ctrl=helloworld
-*/
 $S_controleur = isset($_GET['ctrl']) ? $_GET['ctrl'] : null;
 $S_action = isset($_GET['action']) ? $_GET['action'] : null;
 
@@ -19,7 +14,7 @@ $O_controleur->executer();
 // Les différentes sous-vues ont été "crachées" dans le tampon d'affichage, on les récupère
 $contenuPourAffichage = Vue::recupererContenuTampon();
 
-var_dump($_SESSION);
+error_log(print_r($_SESSION, true));
 
 // On affiche le contenu dans la partie body du gabarit général
 Vue::montrer('gabarit', array('body' => $contenuPourAffichage));

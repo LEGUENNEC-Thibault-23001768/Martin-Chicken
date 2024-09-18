@@ -6,9 +6,9 @@
         <title>Gros caca</title>
     </head>
     <body>
-        <?php Vue::montrer('standard/entete');?>
+        <?php // Vue::montrer('standard/entete');?>
         <?php echo $A_vue['body'] ?>
-        <?php Vue::montrer('standard/pied'); ?>
+        <?php //Vue::montrer('standard/pied'); ?>
 
         <script src="Vues/assets/main.js"></script>
     </body>
