@@ -1,10 +1,11 @@
 @font-face {
     font-family: "League Spartan-Regular";
-    src: url('../fonts/LeagueSpartan-Regular.ttf');
+    src: url('fonts/LeagueSpartan-Regular.ttf');
   }
   
   body {
     margin: 0;
+    background-color: #361a0a;
   }
   
   header {
@@ -24,9 +25,6 @@
     flex-direction: row;
     background-color: rgba(153, 5, 0, 0);
     transition: background-color 0.3s;
-    border-bottom-style: groove;
-    border-bottom-width: 1px;
-    border-color: rgb(245, 235, 220);
   }
   
   #tender.ouvert {
@@ -40,8 +38,8 @@
     opacity: 1;
   }
   
-  header:hover #compte #imgCompte {
-    background-image: url("../images/compte2.png");
+  header:hover #compte img {
+    visibility: hidden;
   }
   .headMenu {
     position: inherit;
@@ -65,8 +63,9 @@
   }
   
   #compte {
+    display: flex;
     left: 95%;
-    background-image: url('../images/compte2.png');
+    background-image: url('https://i.imgur.com/oH6f1Xw.png');
     background-repeat: no-repeat;
     background-size: contain;
     background-color: transparent;
@@ -75,10 +74,7 @@
     top: 4%;
   }
   
-  #fond {
-    width: 100%;
-    margin: 0;
-  }
+
   
   footer {
     display: flex;
@@ -95,7 +91,7 @@
   }
   .menuBouton {
       position: fixed;
-      background-image: url('../images/menu.png');
+      background-image: url('https://i.imgur.com/pUdyf2m.png');
       background-repeat: no-repeat;
       background-size: contain;
       background-color: transparent;
@@ -117,7 +113,7 @@
   #fermeBtn.ouvert {
     left: 95.15%;
     top: 15%;
-    background-image: url('../images/croix.png');
+    background-image: url('https://i.imgur.com/Zk7g8Zw.png');
   }
   
   .menu {
@@ -138,6 +134,40 @@
   }
   
   .article {
-    height: 108px;
+    display: flex;
+    height: 450px;
     background-color: brown;
+    margin: 0;
+    font-size: 450%;
+    font-weight: bold;
+    font-family: "League Spartan-Regular";
   }
+
+  .article section{
+    width: 33.333%;
+    color: #00000085;
+    padding-top: 2%;
+    padding-left: 1%;
+  }
+
+  #fond {
+    width: 100%;
+    margin: 0;
+  }
+
+  #bas{
+    width: 100%;
+    background-image: linear-gradient(#8d673b, #361a0a , #412611)
+  }
+  #bas a{
+    display: inline-block;
+    margin-left: 22%;
+    background: url('https://i.imgur.com/ZCavKoP.png') no-repeat;
+  }
+  
+  #bas a:hover img{
+    opacity: 0;
+    cursor: pointer;
+    transition: opacity 0.8s;
+  }
+  

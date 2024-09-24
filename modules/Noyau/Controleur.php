@@ -9,14 +9,14 @@ final class Controleur
 
         if (empty($S_controleur)) {
             // Nous avons pris le parti de préfixer tous les controleurs par "Controleur"
-            $this->_A_urlDecortique['controleur'] = '';
+            $this->_A_urlDecortique['controleur'] = 'AccueilController';
         } else {
             $this->_A_urlDecortique['controleur'] = ucfirst($S_controleur) . 'Controller';
         }
 
         if (empty($S_action)) {
             // L'action est vide ! On la valorise par défaut
-            $this->_A_urlDecortique['action'] = 'defautAction';
+            $this->_A_urlDecortique['action'] = 'defaultAction';
         } else {
             // On part du principe que toutes nos actions sont suffixées par 'Action'...à nous de le rajouter
             $this->_A_urlDecortique['action']  = $S_action . 'Action';

@@ -19,8 +19,6 @@ $O_controleur->executer();
 // Les différentes sous-vues ont été "crachées" dans le tampon d'affichage, on les récupère
 $contenuPourAffichage = Vue::recupererContenuTampon();
 
-var_dump($_SESSION);
-
 // On affiche le contenu dans la partie body du gabarit général
 Vue::montrer('gabarit', array('body' => $contenuPourAffichage));
 
