@@ -1,6 +1,6 @@
  <!DOCTYPE html>
  <html lang="fr">
- <body>
+ <body id="buddy">
      <header id="tender">
          <input type="button" id="ouvreBtn" class="menuBouton"/>
          <a id="ordre" class="headMenu" href="ordre">l'Ordre</a>
@@ -10,6 +10,6 @@
      <nav class="menu" id="menu">
          <input type="button" id="fermeBtn" class="menuBouton">
          <ul>
-             <li><a href="#">Accueil</a></li>
+             <li><a href="accueil">Accueil</a></li>
          </ul>
      </nav>
