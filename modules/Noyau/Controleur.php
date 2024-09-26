@@ -3,12 +3,14 @@
 final class Controleur
 {
     private $_A_urlDecortique;
+    public $titre = 'Tenracs';
 
+    
     public function __construct ($S_controleur, $S_action)
     {
 
         if (empty($S_controleur)) {
-            // Nous avons pris le parti de préfixer tous les controleurs par "Controleur"
+            // Nous avons pris le parti de préfixer tous les controleurs par "Controller"
             $this->_A_urlDecortique['controleur'] = 'AccueilController';
         } else {
             $this->_A_urlDecortique['controleur'] = ucfirst($S_controleur) . 'Controller';
@@ -22,6 +24,11 @@ final class Controleur
             $this->_A_urlDecortique['action']  = $S_action . 'Action';
         }
 
+    }
+    
+    public function getTitre()
+    {
+        return $this->titre;
     }
     
     protected function render($view, $data = []) {
