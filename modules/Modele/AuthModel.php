@@ -53,6 +53,14 @@ final class AuthModel
         return isset($_SESSION['user_id']);
     }
 
+    public static function checkAuth() {
+        if (!self::isLoggedIn()) {
+            header($_SERVER['SERVER_PROTOCOL'] . "401 Unauthorized");
+            header("Location: /");
+            exit();
+        }
+    }
+
     public static function getCurrentUser(): ?array
     {
         if (self::isLoggedIn()) {

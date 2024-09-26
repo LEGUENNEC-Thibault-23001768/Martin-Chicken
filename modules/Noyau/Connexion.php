@@ -35,31 +35,10 @@ class Connexion
             die("Database connection failed: " . $e->getMessage());
         }
     }
-
-    public static function beginTransaction(): void
+    public static function lastInsertId(): int
     {
-        self::connect();
-        self::$connexion->beginTransaction();
-    }
-
-    public static function commit(): void
-    {
-        self::connect();
-        self::$connexion->commit();
-    }
-
-    public static function rollBack(): void
-    {
-        self::connect();
-        self::$connexion->rollBack();
-    }
-
-    public static function lastInsertId(): string
-    {
-        self::connect();
         return self::$connexion->lastInsertId();
     }
-
 
     public static function execute(string $query, ?array $args = null): array
     {
@@ -84,16 +63,5 @@ class Connexion
         }
     }
 
-
-
-}
-
-
-interface Table
-{
-    public static function insert(array $data): int;
-    public static function update(int $id, array $data): bool;
-    public static function delete(int $id): bool;
-    public static function findById(int $id): ?array;
-    public static function findAll(): array;
+    
 }

@@ -1,23 +1,23 @@
 <?php
 
-final class RepasModel
+class RepasModel
 {
     private static string $table = 'REPAS';
 
-    public static function ajouterRepas(string $nom, string $date, string $adresse, bool $presence = false): array
+    public static function ajouterRepas(string $nom, string $date, string $adresse): int
     {
-        $query = "INSERT INTO " . self::$table . " (Nom, Datee, Adresse, Presence) VALUES (?, ?, ?, ?)";
-        $aa   = Connexion::execute($query, [$nom, $date, $adresse, $presence]);
-        error_log(print_r($aa,true));
+        $query = "INSERT INTO " . self::$table . " (Nom, Date, Adresse) VALUES (?, ?, ?)";
+        Connexion::execute($query, [$nom, $date, $adresse]);
+        return Connexion::lastInsertId();
     }
 
-    public static function modifierRepas(int $id, string $nom, string $date, string $adresse, bool $presence = false): array
+    public static function modifierRepas(int $id, string $nom, string $date, string $adresse): array
     {
-        $query = "UPDATE " . self::$table . " SET Nom = ?, Datee = ?,  Adresse = ?, Presence = ? WHERE Id = ?";
-        return Connexion::execute($query, [$nom, $date, $adresse, $presence, $id]);
+        $query = "UPDATE " . self::$table . " SET Nom = ?, Date = ?, Adresse = ? WHERE Id = ?";
+        return Connexion::execute($query, [$nom, $date, $adresse, $id]);
     }
 
-    public static function supprimerRepas(int $id): bool
+    public static function supprimerRepas(int $id): array
     {
         $query = "DELETE FROM " . self::$table . " WHERE Id = ?";
         return Connexion::execute($query, [$id]);
@@ -25,57 +25,88 @@ final class RepasModel
 
     public static function listerRepas(): array
     {
-        $query = "SELECT * FROM " . self::$table . " ORDER BY Datee DESC";
+        $query = "SELECT * FROM " . self::$table;
         return Connexion::execute($query);
     }
 
     public static function obtenirRepas(int $id): ?array
     {
-        $query = "SELECT * FROM " . self::$table . " WHERE Id = ?";
+        $query = "SELECT Id, Nom, Date, Adresse FROM " . self::$table . " WHERE Id = ?";
         $result = Connexion::execute($query, [$id]);
-        return $result ? $result[0] : null;
+        return !empty($result) ? $result[0] : null;
     }
 
-    public static function listerPlatsRepas(int $repas_id): array
+    public static function associerPlats(int $repasId, array $plats): bool
     {
-        $query = "SELECT * FROM PLAT WHERE Repas_Id = ?";
-        return Connexion::execute($query, [$repas_id]);
+        $query = "INSERT INTO REPAS_PLATS (Repas_Id, Plat_Id) VALUES (?, ?)";
+        $success = true;
+
+        foreach ($plats as $platId) {
+            $result = Connexion::execute($query, [$repasId, $platId]);
+            if (empty($result)) {
+                $success = false;
+            }
+        }
+
+        return $success;
     }
 
-    public static function ajouterParticipant(int $repas_id, int $tenrac_id): bool
+    public static function obtenirPlatsRepas(int $repasId): array
     {
-        $query = "INSERT INTO REPAS_PARTICIPANT (Repas_Id, Tenrac_Id) VALUES (?, ?)";
-        return Connexion::execute($query, [$repas_id, $tenrac_id]);
+        $query = "SELECT p.Id, p.Nom, p.Presence 
+                FROM PLAT p 
+                JOIN REPAS_PLATS rp ON p.Id = rp.Plat_Id 
+                WHERE rp.Repas_Id = ?";
+        $plats = Connexion::execute($query, [$repasId]);
+
+        // Ajouter les ingrédients pour chaque plat
+        foreach ($plats as &$plat) {
+            $plat['ingredients'] = self::obtenirIngredientsPourPlat($plat['id']);
+        }
+
+        return $plats;
     }
 
-    public static function retirerParticipant(int $repas_id, int $tenrac_id): bool
+    private static function obtenirIngredientsPourPlat(int $platId): array
     {
-        $query = "DELETE FROM REPAS_PARTICIPANT WHERE Repas_Id = ? AND Tenrac_Id = ?";
-        return Connexion::execute($query, [$repas_id, $tenrac_id]);
+        $query = "SELECT i.Nom 
+                FROM INGREDIENTS i
+                JOIN PLATS_INGREDIENTS pi ON i.Id = pi.Ingredient_Id
+                WHERE pi.Plat_Id = ?";
+        $ingredients = Connexion::execute($query, [$platId]);
+        return array_column($ingredients, 'nom');
     }
 
-    public static function listerParticipants(int $repas_id): array
+    public static function mettreAJourPlats(int $repasId, array $nouveauxPlats): bool
     {
-        $query = "SELECT t.* FROM TENRAC t
-                  JOIN REPAS_PARTICIPANT rp ON t.Id = rp.Tenrac_Id
-                  WHERE rp.Repas_Id = ?";
-        return Connexion::execute($query, [$repas_id]);
+        // Supprimer tous les plats actuels du repas
+        $queryDelete = "DELETE FROM REPAS_PLATS WHERE Repas_Id = ?";
+        Connexion::execute($queryDelete, [$repasId]);
+
+        // Ajouter les nouveaux plats
+        return self::associerPlats($repasId, $nouveauxPlats);
     }
 
-    public static function verifierParticipation(int $repas_id, int $tenrac_id): bool
+    // Méthodes supplémentaires si nécessaire
+
+    public static function listerRepasAvecPlats(): array
     {
-        $query = "SELECT COUNT(*) as count FROM REPAS_PARTICIPANT 
-                  WHERE Repas_Id = ? AND Tenrac_Id = ?";
-        $result = Connexion::execute($query, [$repas_id, $tenrac_id]);
-        return $result[0]['count'] > 0;
+        $query = "SELECT r.*, GROUP_CONCAT(DISTINCT p.Nom SEPARATOR ', ') as Plats,
+            GROUP_CONCAT(DISTINCT i.Nom SEPARATOR ', ') as Ingredients
+            FROM " . self::$table . " r
+            LEFT JOIN REPAS_PLATS rp ON r.Id = rp.Repas_Id
+            LEFT JOIN PLAT p ON rp.Plat_Id = p.Id
+            LEFT JOIN PLATS_INGREDIENTS pi ON p.Id = pi.Plat_Id
+            LEFT JOIN INGREDIENTS i ON pi.Ingredient_Id = i.Id
+            GROUP BY r.Id";
+        return Connexion::execute($query);
     }
 
-    public static function listerRepasParticipant(int $tenrac_id): array
+    public static function rechercherRepas(string $terme): array
     {
-        $query = "SELECT r.* FROM " . self::$table . " r
-                  JOIN REPAS_PARTICIPANT rp ON r.Id = rp.Repas_Id
-                  WHERE rp.Tenrac_Id = ?
-                  ORDER BY r.Datee DESC";
-        return Connexion::execute($query, [$tenrac_id]);
+        $query = "SELECT * FROM " . self::$table . " 
+                  WHERE Nom LIKE ? OR Adresse LIKE ?";
+        $termeLike = "%$terme%";
+        return Connexion::execute($query, [$termeLike, $termeLike]);
     }
 }

@@ -1,86 +1,155 @@
 <?php 
 final class PlatController
 {
-    public static string $titre  = "Compte";
-    public function defautAction()
+    public static string $titre = "Gestion des Plats";
+
+    private function checkAuth()
     {
         if (!AuthModel::isLoggedIn()) {
             header("HTTP/1.1 401 Unauthorized");
             header("Location: /?ctrl=Login");
             exit();
         }
+    }
 
+    public function defautAction()
+    {
+        $this->checkAuth();
         $this->listerAction();
-        //Vue::montrer("gestion/dashboard", ['onPlat' => true]);
     }
 
     public function ajouterAction()
     {
-        if (!AuthModel::isLoggedIn()) {
-            header("HTTP/1.1 401 Unauthorized");
-            header("Location: /?ctrl=Login");
-            exit();
-        }
+        $this->checkAuth();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $nom = $_POST['nom'];
-            $repas_id = $_POST['repas_id'];
-            
-            error_log(print_r($nom, true));
-            error_log(print_r($repas_id, true));
-            if (isset($nom) && isset($repas_id)) {
+            $nom = $_POST['nom'] ?? '';
+            $ingredients = $_POST['ingredients'] ?? []; 
+            $presence = isset($_POST['presence']);
+            $sauces = $_POST['sauces'] ?? [];
 
-                try {
-                    PlatModel::ajouterPlat($nom, (int) $repas_id);
-                } catch (Exc)
+            if ($nom) {
+                $platId = PlatModel::ajouterPlat($nom, $presence);
 
-                header('Location: index.php');
+                if ($platId) {
+                    if (!empty($ingredients)) {
+                        PlatModel::associerIngredients($platId, $ingredients);
+                    }
+                    
+                    if (!empty($sauces)) {
+                        PlatModel::associerSauces($platId, $sauces);
+                    }
+
+                    header('Location: index.php?ctrl=Plat&action=lister');
+                    exit();
+                } else {
+                    $error = 'Erreur lors de l\'ajout du plat.';
+                }
             } else {
-                Vue::montrer('gestion/ajouter', array('onPlat' => true, 'error' => 'caca pipi'));
-                return;
+                $error = 'Veuillez remplir tous les champs obligatoires.';
             }
-        } else {
-            Vue::montrer('gestion/ajouter', ['onPlat' => true]);
         }
+
+        $ingredients = PlatModel::listerIngredients();
+        $sauces = PlatModel::listerSauces();
+        Vue::montrer('gestion/ajouter', [
+            'onPlat' => true, 
+            'ingredients' => $ingredients, 
+            'sauces' => $sauces,
+            'error' => $error ?? null
+        ]);
     }
 
     public function modifierAction()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $id = $_POST['id'];
-            $nom = $_POST['nom'];
-            $repas_id = $_POST['repas_id'];
+        $this->checkAuth();
 
-            if ($id && $nom && $repas_id) {
-                PlatModel::modifierPlat((int) $id, $nom, (int) $repas_id);
-                header('Location: index.php?ctrl=Plat&action=lister');
-            } else {
-                echo "Remplissez tous les champs.";
-            }
-        } else {
-            $id = $_GET['id'] ?? null;
-            $plat = PlatModel::obtenirPlat((int) $id);
-            Vue::montrer('gestion/modifier', ['plat' => $plat, 'onPlat' => true]);
+        $id = $_GET['id'] ?? $_POST['id'] ?? null;
+
+        if (!$id) {
+            header('Location: index.php?ctrl=Plat&action=lister');
+            exit();
         }
+
+        $plat = PlatModel::obtenirPlat((int) $id);
+        if (!$plat) {
+            header('Location: index.php?ctrl=Plat&action=lister');
+            exit();
+        }
+
+        $error = null;
+        $success = false;
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $nom = trim($_POST['nom'] ?? '');
+            $ingredients = $_POST['ingredients'] ?? [];
+            $sauces = $_POST['sauces'] ?? [];
+
+            $modifications = false;
+
+            // Vérifier si le nom a changé
+            if ($nom !== '' && $nom !== $plat['nom']) {
+                PlatModel::modifierPlat((int) $id, $nom);
+                $modifications = true;
+            }
+
+            // Vérifier si les ingrédients ont changé
+            $ingredientsActuels = array_column(PlatModel::obtenirIngredientsPlat((int)$id), 'id');
+            if (array_diff($ingredients, $ingredientsActuels) !== array_diff($ingredientsActuels, $ingredients)) {
+                PlatModel::mettreAJourIngredients((int) $id, $ingredients);
+                $modifications = true;
+            }
+
+            // Vérifier si les sauces ont changé
+            $saucesActuelles = array_column(PlatModel::obtenirSaucesPlat((int)$id), 'id');
+            if (array_diff($sauces, $saucesActuelles) !== array_diff($saucesActuelles, $sauces)) {
+                PlatModel::mettreAJourSauces((int) $id, $sauces);
+                $modifications = true;
+            }
+
+            if ($modifications) {
+                $success = true;
+                $plat = PlatModel::obtenirPlat((int) $id); // Recharger les données du plat
+            } else {
+                $error = "Aucune modification n'a été effectuée.";
+            }
+        }
+
+        $ingredients = PlatModel::listerIngredients();
+        $ingredientsPlat = PlatModel::obtenirIngredientsPlat((int)$id);
+        $sauces = PlatModel::listerSauces();
+        $saucesPlat = PlatModel::obtenirSaucesPlat((int)$id);
+        
+        Vue::montrer('gestion/modifier', [
+            'plat' => $plat, 
+            'ingredients' => $ingredients, 
+            'ingredientsPlat' => $ingredientsPlat,
+            'sauces' => $sauces,
+            'saucesPlat' => $saucesPlat,
+            'onPlat' => true,
+            'error' => $error,
+            'success' => $success
+        ]);
     }
 
     public function supprimerAction()
     {
+        $this->checkAuth();
+
         $id = $_GET['id'] ?? null;
         if ($id) {
             PlatModel::supprimerPlat((int) $id);
-            header('Location: index.php?ctrl=Plat&action=lister');
-        } else {
-            echo "ID manquant.";
         }
+        header('Location: index.php?ctrl=Plat&action=lister');
+        exit();
     }
 
     public function listerAction()
     {
+        $this->checkAuth();
+
         $plats = PlatModel::listerPlats();
-        Vue::montrer('gestion/dashboard', ['plats' => $plats, 'onPlat' => true]);
+        Vue::montrer('gestion/lister', ['plats' => $plats, 'onPlat' => true]);
     }
-
 }
-
 ?>

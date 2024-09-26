@@ -1,100 +1,166 @@
-<?php
-
+<?php 
 final class RepasController
 {
-    public static string $titre  = "Compte";
-    public function defautAction()
+    public static string $titre = "Gestion des Repas";
+
+    private function checkAuth()
     {
         if (!AuthModel::isLoggedIn()) {
             header("HTTP/1.1 401 Unauthorized");
             header("Location: /?ctrl=Login");
             exit();
         }
+    }
 
+    public function defautAction()
+    {
+        $this->checkAuth();
         $this->listerAction();
     }
 
-    // Ajouter un nouveau repas
     public function ajouterAction()
     {
-        if (!AuthModel::isLoggedIn()) {
-            header("HTTP/1.1 401 Unauthorized");
-            header("Location: /?ctrl=Login");
+        $this->checkAuth();
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $nom = $_POST['nom'] ?? '';
+            $date = $_POST['date'] ?? '';
+            $adresse = $_POST['adresse'] ?? '';
+            $plats = $_POST['plats'] ?? [];
+
+            if ($nom && $date && $adresse) {
+                $repasId = RepasModel::ajouterRepas($nom, $date, $adresse);
+
+                if ($repasId) {
+                    if (!empty($plats)) {
+                        RepasModel::associerPlats($repasId, $plats);
+                    }
+
+                    header('Location: index.php?ctrl=Repas&action=lister');
+                    exit();
+                } else {
+                    $error = 'Erreur lors de l\'ajout du repas.';
+                }
+            } else {
+                $error = 'Veuillez remplir tous les champs obligatoires.';
+            }
+        }
+
+        $plats = PlatModel::listerPlats();
+        Vue::montrer('gestion/ajouter', [
+            'onRepas' => true, 
+            'plats' => $plats,
+            'error' => $error ?? null
+        ]);
+    }
+
+    public function modifierAction()
+    {
+        $this->checkAuth();
+
+        $id = $_GET['id'] ?? $_POST['id'] ?? null;
+
+        if (!$id) {
+            header('Location: index.php?ctrl=Repas&action=lister');
             exit();
         }
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            
-            $id = $_POST['id'];
-            $nom = $_POST['nom'];
-            $date = $_POST['date'];
-            $adresse = $_POST['adresse'];
-            $presence = isset($_POST['presence']) ? 1 : 0;
-
-            if ($nom && $date && $adresse) {
-                RepasModel::ajouterRepas($nom, $date, $adresse, $presence);
-                header('Location: index.php?ctrl=Repas&action=lister');
-            } else {
-                Vue::montrer('gestion/ajouter', array('onRepas' => true, 'error' => 'Tous les champs sont obligatoires.'));
-                return;
-            }
-        } else {
-            Vue::montrer('gestion/ajouter', ['onRepas' => true]);
+        $repas = RepasModel::obtenirRepas((int) $id);
+        if (!$repas) {
+            header('Location: index.php?ctrl=Repas&action=lister');
+            exit();
         }
-    }
 
-    // Modifier un repas existant
-    public function modifierAction()
-    {
+        $error = null;
+        $success = false;
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Traitement du formulaire POST pour la modification
-            $id = $_POST['id'];
-            $nom = $_POST['nom'];
-            $date = $_POST['date'];
-            $adresse = $_POST['adresse'];
-            $presence = isset($_POST['presence']) ? 1 : 0;
+            $nom = trim($_POST['nom'] ?? '');
+            $date = $_POST['date'] ?? '';
+            $adresse = trim($_POST['adresse'] ?? '');
+            $plats = $_POST['plats'] ?? [];
 
-            if ($nom && $date && $adresse) {
-                RepasModel::modifierRepas((int)$id, $nom, $date, $adresse, $presence);
-                header('Location: index.php?ctrl=Repas&action=lister');
-            } else {
-                echo "Remplissez tous les champs.";
-            }
-        } else {
-            // Affichage du formulaire pré-rempli pour la modification
-            $id = $_GET['id'] ?? null;
-            if ($id) {
-                $repas = RepasModel::obtenirRepas((int)$id);
-                //error_log(print_r($repas,true));
-                if (isset($repas)) {
-                    error_log("azioezhaioe");
-                    Vue::montrer('gestion/modifier', ['repas' => $repas, 'onRepas' => true]);
+
+            $modifications = false;
+
+            if ($nom !== '' && $date !== '' && $adresse !== '') {
+                if ($nom !== $repas['nom'] || $date !== $repas['date'] || $adresse !== $repas['adresse']) {
+                    RepasModel::modifierRepas((int) $id, $nom, $date, $adresse);
+                    $modifications = true;
+                }
+
+                $platsActuels = array_column(RepasModel::obtenirPlatsRepas((int)$id), 'id');
+                if (array_diff($plats, $platsActuels) !== array_diff($platsActuels, $plats)) {
+                    RepasModel::mettreAJourPlats((int) $id, $plats);
+                    $modifications = true;
+                }
+
+                if ($modifications) {
+                    $success = true;
+                    $repas = RepasModel::obtenirRepas((int) $id); // Recharger les données du repas
                 } else {
-                    echo "Repas introuvable.";
+                    $error = "Aucune modification n'a été effectuée.";
                 }
             } else {
-                echo "ID manquant.";
+                $error = "Veuillez remplir tous les champs obligatoires.";
             }
         }
+
+        $plats = PlatModel::listerPlats();
+        $platsRepas = RepasModel::obtenirPlatsRepas((int)$id);
+
+        $platsFormates = array_map(function($plat) {
+            return [
+                'id' => $plat['id'],
+                'nom' => $plat['nom'],
+                'ingredients' => implode(', ', $plat['ingredients'])
+            ];
+        }, $platsRepas);
+
+        error_log(print_r($platsFormates,true));
+
+        Vue::montrer('gestion/modifier', [
+            'repas' => $repas, 
+            'plats' => $plats,
+            'platsRepas' => $platsFormates,
+            'onRepas' => true,
+            'error' => $error,
+            'success' => $success
+        ]);
     }
 
-    // Supprimer un repas
     public function supprimerAction()
     {
+        $this->checkAuth();
+
         $id = $_GET['id'] ?? null;
         if ($id) {
-            RepasModel::supprimerRepas((int)$id);
-            header('Location: index.php?ctrl=Repas&action=lister');
-        } else {
-            echo "ID manquant.";
+            RepasModel::supprimerRepas((int) $id);
         }
+        header('Location: index.php?ctrl=Repas&action=lister');
+        exit();
     }
 
-    // Lister tous les repas
     public function listerAction()
     {
-        $repas = RepasModel::listerRepas();
-        //error_log(print_r($repas,true));
+        $this->checkAuth();
+
+        $repas = RepasModel::listerRepasAvecPlats();
         Vue::montrer('gestion/lister', ['repas' => $repas, 'onRepas' => true]);
     }
+
+    public function rechercherAction()
+    {
+        $this->checkAuth();
+
+        $terme = $_GET['terme'] ?? '';
+        if ($terme) {
+            $resultats = RepasModel::rechercherRepas($terme);
+            Vue::montrer('gestion/rechercher', ['resultats' => $resultats, 'terme' => $terme, 'onRepas' => true]);
+        } else {
+            header('Location: index.php?ctrl=Repas&action=lister');
+            exit();
+        }
+    }
 }
+?>
