@@ -4,6 +4,7 @@ session_save_path(__DIR__ . "/sessions");
 session_start();
 require 'Noyau/autoloader.php';
 
+
 $S_controleur = isset($_GET['ctrl']) ? $_GET['ctrl'] : null;
 $S_action = isset($_GET['action']) ? $_GET['action'] : null;
 
