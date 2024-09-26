@@ -6,4 +6,3 @@ final class AccueilController
         Vue::montrer("accueil", ""); // à modifier par le vrai accueil
     }
 }
-?>

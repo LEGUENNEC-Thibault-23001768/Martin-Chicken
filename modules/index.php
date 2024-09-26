@@ -19,5 +19,3 @@ error_log(print_r($_SESSION, true));
 
 // On affiche le contenu dans la partie body du gabarit général
 Vue::montrer('gabarit', array('body' => $contenuPourAffichage));
-
-?>
