@@ -64,8 +64,6 @@ class Connexion
     public static function execute(string $query, ?array $args = null): array
     {
         self::connect();
-
-        
         try {
             self::$connexion->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER);
             
@@ -79,6 +77,9 @@ class Connexion
 
             return $statement->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
+
+            // log and rethrow error
+            
             die("Query execution failed: " . $e->getMessage());
         }
     }

@@ -1,15 +1,16 @@
 <?php
 final class LoginController
 {
+    public static string $titre  = "Connexion";
     public function defautAction()
     {
-        //var_dump($_SESSION);
-
-        $error = isset($_SESSION['login_error']) ? $_SESSION['login_error'] : '';
-        unset($_SESSION['login_error']);
-
-        Vue::montrer('auth/login', array('error' => $error));
-        
+        if (AuthModel::isLoggedIn()) {
+            header("Location: /?ctrl=Plat"); // redirect to dashboard
+        } else {
+            $error = isset($_SESSION['login_error']) ? $_SESSION['login_error'] : '';
+            unset($_SESSION['login_error']);
+            Vue::montrer('auth/login', array('error' => $error));
+        }
     }
 
     public function loginAction() {
@@ -35,7 +36,7 @@ final class LoginController
                 return;
             }
 
-            header('Location: index.php?ctrl=Plat'); // rediriger vers dashboard
+            header('Location: index.php?ctrl=Repas'); // rediriger vers dashboard
 
 
         } catch (Exception $e) {

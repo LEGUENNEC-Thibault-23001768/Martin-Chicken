@@ -8,7 +8,15 @@ html{
 body {
   margin: 0;
   background-color: #361a0a;
+  color: white;
 }
+
+body > a {
+  color: red;
+}
+
+
+
 body.ouvert {
   overflow-y: hidden;
 }

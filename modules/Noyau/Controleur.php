@@ -23,6 +23,10 @@ final class Controleur
         }
 
     }
+
+    public function getUrlDecortique(): array {
+        return $this->_A_urlDecortique;
+    }
     
     protected function render($view, $data = []) {
         extract($data);
