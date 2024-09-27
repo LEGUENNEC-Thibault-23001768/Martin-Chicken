@@ -1,21 +1,25 @@
 <?php
-final class LoginController
+final class CompteController
 {
-    public function defautAction()
+    public static string $titre  = "Connexion";
+    public function defaultAction()
     {
-        //var_dump($_SESSION);
-
-        $error = isset($_SESSION['login_error']) ? $_SESSION['login_error'] : '';
-        unset($_SESSION['login_error']);
-
-        Vue::montrer('auth/login', array('error' => $error));
-        
+        if (AuthModel::isLoggedIn()) {
+            header("Location: /?ctrl=Plat"); // redirect to dashboard
+        } else {
+            $error = isset($_SESSION['login_error']) ? $_SESSION['login_error'] : '';
+            unset($_SESSION['login_error']);
+            Vue::montrer('compte', array('error' => $error));
+        }
     }
 
     public function loginAction() {
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST')
             return;
+
+        if (isset($_SESSION['login_error']))
+            unset($_SESSION['login_error']);
 
         $username = $_POST['username'];
         $password = $_POST['password'];
@@ -24,16 +28,15 @@ final class LoginController
         
         $result = $auth_model->login($username, $password);
 
-        var_dump($result);
         try {
 
             if (!$result) {
                 $_SESSION['login_error'] = "Mauvais nom d'utilisateur ou mot de passe";
-                //header('Location: index.php?ctrl=Login');
+                header('Location: index.php?ctrl=Compte');
                 return;
             }
 
-            //header('Location: index.php?ctrl=ZEBI'); // rediriger vers dashboard
+            header('Location: index.php?ctrl=Repas'); // rediriger vers dashboard
 
 
         } catch (Exception $e) {

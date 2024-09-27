@@ -1,0 +1,95 @@
+@import "main.css";
+header {
+    color: rgb(80, 35, 20);
+    background-color: rgb(245, 235, 220);
+    opacity: 1;
+  }
+header #compte img {
+    visibility: hidden;
+}
+
+#utile {
+    height: 738px;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(211, 204, 171);
+}
+
+#cadre {
+    background-color: rgb(250, 246, 226);
+    border-radius: 8px;
+    padding: 30px;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+div h2 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+form {
+    width: 100%;
+}
+
+.eleForm {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.eleForm label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+    font-weight: bold;
+}
+
+.eleForm input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+    color: #333;
+    box-sizing: border-box;
+}
+
+.eleForm input:focus {
+    outline: none;
+    border-color: #d43434;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+.eleForm a{
+    display: block;
+    text-align: right;
+    margin-top: 5px;
+    font-size: 14px;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.eleForm a:hover {
+    text-decoration: underline;
+}
+
+.login-btn {
+    width: 100%;
+    background-color: #d43434;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.login-btn:hover {
+    background-color: #a12828;
+}
+
+
