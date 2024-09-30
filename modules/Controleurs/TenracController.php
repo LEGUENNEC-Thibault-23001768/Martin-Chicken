@@ -39,7 +39,7 @@ final class TenracController
                 'structure_id' => $_POST['structure_id']
             ];
 
-            if ($this->validateTenracData($data)) {
+            if ($this->validerAction($data)) {
                 $id = TenracModel::ajouterTenrac($data);
                 if ($id) {
                     header('Location: index.php?ctrl=Tenrac&action=lister');
@@ -85,7 +85,7 @@ final class TenracController
                 'structure_id' => $_POST['structure_id']
             ];
 
-            if ($this->validateTenracData($data)) {
+            if ($this->validerAction($data)) {
                 if (TenracModel::modifierTenrac((int)$id, $data)) {
                     header('Location: index.php?ctrl=Tenrac&action=lister');
                     exit();
@@ -124,7 +124,7 @@ final class TenracController
         }
     }
 
-    private function validateTenracData(array $data): bool
+    private function validerAction(array $data): bool
     {
         $requiredFields = ['code_personnel', 'nom', 'email', 'grade'];
         foreach ($requiredFields as $field) {
