@@ -17,7 +17,7 @@
             </section>
             
             <section class="eleForm">
-                <button type="submit" class="login-btn">Se connecter</button>
+                <button id="login" type="submit" class="login-btn">Se connecter</button>
             </section>
         </form>
     </div>

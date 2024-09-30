@@ -3,14 +3,12 @@
 final class Controleur
 {
     private $_A_urlDecortique;
-    public $titre = 'Tenracs';
 
-    
     public function __construct ($S_controleur, $S_action)
     {
 
         if (empty($S_controleur)) {
-            // Nous avons pris le parti de préfixer tous les controleurs par "Controller"
+            // Nous avons pris le parti de préfixer tous les controleurs par "Controleur"
             $this->_A_urlDecortique['controleur'] = 'AccueilController';
         } else {
             $this->_A_urlDecortique['controleur'] = ucfirst($S_controleur) . 'Controller';
@@ -25,10 +23,9 @@ final class Controleur
         }
 
     }
-    
-    public function getTitre()
-    {
-        return $this->titre;
+
+    public function getUrlDecortique(): array {
+        return $this->_A_urlDecortique;
     }
     
     protected function render($view, $data = []) {
@@ -37,11 +34,15 @@ final class Controleur
     }
 
 
+    // Vérifie si la requête est une requête AJAX
+    public function verifAjax() {
+        return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+    }
+    
     // On exécute
     public function executer()
     {
-
-        //fonction de rappel de notre controleur cible (ControleurHelloworld pour notre premier exemple)
+        //fonction de rappel de notre controleur cible
         call_user_func_array(array(new $this->_A_urlDecortique['controleur'],
             $this->_A_urlDecortique['action']), array());
 

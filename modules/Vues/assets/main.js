@@ -27,6 +27,7 @@ const handleScroll = () => {
     elements.compte.style.visibility = isScrolledHeader ? "hidden" : "visible";
 };
 
+
 elements.ouvre_btn.addEventListener('click', () => toggle_menu(true));
 elements.ferme_btn.addEventListener('click', () => toggle_menu(false));
 
