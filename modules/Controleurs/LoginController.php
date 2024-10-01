@@ -5,11 +5,12 @@ final class LoginController
     public function defautAction()
     {
         if (AuthModel::isLoggedIn()) {
-            header("Location: /?ctrl=Plat"); // redirect to dashboard
+            Vue::montrer("compte", array());
+            //header("Location: /?ctrl=Login"); // redirect to dashboard
         } else {
             $error = isset($_SESSION['login_error']) ? $_SESSION['login_error'] : '';
             unset($_SESSION['login_error']);
-            Vue::montrer('auth/login', array('error' => $error));
+            Vue::montrer('compte', array('error' => $error));
         }
     }
 
@@ -36,6 +37,8 @@ final class LoginController
                 return;
             }
 
+
+            //Vue::montrer('compte', '');
             header('Location: index.php?ctrl=Repas'); // rediriger vers dashboard
 
 

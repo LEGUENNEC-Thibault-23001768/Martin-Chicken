@@ -1,0 +1,102 @@
+@import "main.css";
+
+.rubrique {
+    display: flex;
+    height: 450px;
+    background-color: brown;
+    margin: 0;
+    font-size: 450%;
+    font-weight: bold;
+    font-family: "League Spartan-Regular";
+    }
+  
+.rubrique section{
+    width: 33.333%;
+    color: #00000085;
+    padding-top: 2%;
+    padding-left: 1%;
+}
+  
+#fond {
+    width: 100%;
+    margin: 0;
+}
+  
+#bas {
+    width: 100%;
+    background-image: linear-gradient(#8d673b, #361a0a , #412611)
+}
+#bas a {
+    display: inline-block;
+    margin-left: 22.5%;
+    background: url('https://i.imgur.com/ZCavKoP.png') no-repeat;
+}
+    
+#bas a:hover img {
+    opacity: 0;
+    cursor: pointer;
+    transition: opacity 0.8s;
+}
+    
+#fleche {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-56%, 210%);
+    width: 150px;
+    height: 150px;
+    z-index: 4;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+  
+#fleche:hover {
+    transform: translate(-56%, 220%);
+}
+  
+#appat {
+    position: absolute;
+    background-color: #eba102c2;
+    color : rgb(245, 235, 220);
+    z-index: 4;
+    top: 78%;
+    left: 43.5%;
+    font-family: "League Spartan-Regular";
+    font-size: xx-large;
+    font-weight: bold;
+    border-radius: 20px;
+    padding: 10px;
+  
+}
+  
+#pres {
+    position: absolute;
+    z-index: 4;
+    top: 30%;
+    left: 36.5%;
+    text-align: center;
+    font-family: "League Spartan-Regular";
+    font-size: 500%;
+    width: 500px;
+    text-wrap: pretty;
+    background: linear-gradient(0.9turn, #f6c43c, #ebf8e1, #f69d3c);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: opacity 0.5s;
+}
+  
+#pres.ouvert {
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+  
+.btn {
+    font-family: "League Spartan-Regular";
+    font-size: 300%;
+}
+  
+.btn:hover {
+    transition: font-size 0.5s;
+    color: blue;
+}

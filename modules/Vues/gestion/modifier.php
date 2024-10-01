@@ -126,22 +126,22 @@
 <?php endif; ?>
 
 <form action="index.php?ctrl=Tenrac&action=modifier" method="POST">
-    <input type="hidden" name="id" value="<?php echo $A_vue['tenrac']['Id']; ?>">
+    <input type="hidden" name="id" value="<?php echo $A_vue['tenrac']['id']; ?>">
 
     <label for="code_personnel">Code Personnel:</label>
-    <input type="text" id="code_personnel" name="code_personnel" value="<?php echo htmlspecialchars($A_vue['tenrac']['Code_personnel']); ?>" required><br>
+    <input type="text" id="code_personnel" name="code_personnel" value="<?php echo htmlspecialchars($A_vue['tenrac']['code_personnel']); ?>" required><br>
 
     <label for="nom">Nom:</label>
-    <input type="text" id="nom" name="nom" value="<?php echo htmlspecialchars($A_vue['tenrac']['Nom']); ?>" required><br>
+    <input type="text" id="nom" name="nom" value="<?php echo htmlspecialchars($A_vue['tenrac']['nom']); ?>" required><br>
 
     <label for="email">Email:</label>
-    <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($A_vue['tenrac']['Email']); ?>" required><br>
+    <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($A_vue['tenrac']['email']); ?>" required><br>
 
     <label for="numero">Numéro:</label>
-    <input type="text" id="numero" name="numero" value="<?php echo htmlspecialchars($A_vue['tenrac']['Numero']); ?>"><br>
+    <input type="text" id="numero" name="numero" value="<?php echo htmlspecialchars($A_vue['tenrac']['numero']); ?>"><br>
 
     <label for="adresse">Adresse:</label>
-    <input type="text" id="adresse" name="adresse" value="<?php echo htmlspecialchars($A_vue['tenrac']['Adresse']); ?>"><br>
+    <input type="text" id="adresse" name="adresse" value="<?php echo htmlspecialchars($A_vue['tenrac']['adresse']); ?>"><br>
 
     <label for="grade">Grade:</label>
     <select id="grade" name="grade" required>
@@ -194,9 +194,9 @@
     <select id="structure_id" name="structure_id">
         <option value="">Aucune</option>
         <?php foreach ($A_vue['structures'] as $structure): ?>
-            <?php $selected = ($A_vue['tenrac']['Structure_Id'] == $structure['Id']) ? 'selected' : ''; ?>
-            <option value="<?php echo $structure['Id']; ?>" <?php echo $selected; ?>>
-                <?php echo htmlspecialchars($structure['Nom']); ?>
+            <?php $selected = ($A_vue['tenrac']['structure_id'] == $structure['id']) ? 'selected' : ''; ?>
+            <option value="<?php echo $structure['id']; ?>" <?php echo $selected; ?>>
+                <?php echo htmlspecialchars($structure['nom']); ?>
             </option>
         <?php endforeach; ?>
     </select><br>

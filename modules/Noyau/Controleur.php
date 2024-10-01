@@ -33,6 +33,12 @@ final class Controleur
         require_once 'Vues/' . $view . '.php';
     }
 
+    public static function is_ajax() {
+        return !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && 
+               strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
+    }
+    
+
 
     // On exécute
     public function executer()

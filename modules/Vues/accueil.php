@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="Vues/assets/accueil.css">
 <section>
     <img id="fond" src="https://i.imgur.com/7PIzyIA.png"/>
     <h1 id="pres">Cher Tenrac, Bienvenu</h1>
@@ -15,5 +16,5 @@
         <section style="background-color: #00bf63 ;">Notre Histoire !</section>
 </div>
 <div id="bas">
-    <a href="ordre"><img src='https://i.imgur.com/d8oI2nd.png'/></a>
+    <a href="?ctrl=ordre"><img src='https://i.imgur.com/d8oI2nd.png'/></a>
 </div>
