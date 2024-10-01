@@ -5,7 +5,7 @@ final class CompteController
     public function defaultAction()
     {
         if (AuthModel::isLoggedIn()) {
-            header("Location: /?ctrl=Plat"); // redirect to dashboard
+            Vue::montrer('compte');
         } else {
             $error = isset($_SESSION['login_error']) ? $_SESSION['login_error'] : '';
             unset($_SESSION['login_error']);
@@ -36,7 +36,7 @@ final class CompteController
                 return;
             }
 
-            header('Location: index.php?ctrl=Repas'); // rediriger vers dashboard
+            Vue::montrer('compte');
 
 
         } catch (Exception $e) {

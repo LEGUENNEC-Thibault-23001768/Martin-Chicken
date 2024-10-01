@@ -2,7 +2,7 @@
 
 // Start the session at the beginning of your script
 
-class AuthModel
+final class AuthModel
 {
     private static string $table = 'AUTHENTIFICATION';
 
@@ -12,8 +12,6 @@ class AuthModel
         try {
             $query = "SELECT * FROM " . self::$table . " WHERE username = ?";
             $result = Connexion::execute($query, [$username]);
-            
-            error_log("Login attempt result: " . print_r($result, true));
             
             if (is_array($result) && count($result) === 1) {
                 $user = $result[0];
@@ -53,6 +51,14 @@ class AuthModel
     public static function isLoggedIn(): bool
     {
         return isset($_SESSION['user_id']);
+    }
+
+    public static function checkAuth() {
+        if (!self::isLoggedIn()) {
+            header($_SERVER['SERVER_PROTOCOL'] . "401 Unauthorized");
+            header("Location: /");
+            exit();
+        }
     }
 
     public static function getCurrentUser(): ?array

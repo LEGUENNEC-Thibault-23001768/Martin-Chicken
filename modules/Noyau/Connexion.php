@@ -2,8 +2,6 @@
 
 //namespace data\database;
 
-use PDO;
-use PDOException;
 
 define("DB_HOST", "mysql-martin-chicken.alwaysdata.net");
 define("DB_NAME", "martin-chicken_db");
@@ -35,37 +33,14 @@ class Connexion
             die("Database connection failed: " . $e->getMessage());
         }
     }
-
-    public static function beginTransaction(): void
+    public static function lastInsertId(): int
     {
-        self::connect();
-        self::$connexion->beginTransaction();
-    }
-
-    public static function commit(): void
-    {
-        self::connect();
-        self::$connexion->commit();
-    }
-
-    public static function rollBack(): void
-    {
-        self::connect();
-        self::$connexion->rollBack();
-    }
-
-    public static function lastInsertId(): string
-    {
-        self::connect();
         return self::$connexion->lastInsertId();
     }
-
 
     public static function execute(string $query, ?array $args = null): array
     {
         self::connect();
-
-        
         try {
             self::$connexion->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER);
             
@@ -79,20 +54,12 @@ class Connexion
 
             return $statement->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
+
+            // log and rethrow error
+            
             die("Query execution failed: " . $e->getMessage());
         }
     }
 
-
-
-}
-
-
-interface Table
-{
-    public static function insert(array $data): int;
-    public static function update(int $id, array $data): bool;
-    public static function delete(int $id): bool;
-    public static function findById(int $id): ?array;
-    public static function findAll(): array;
+    
 }

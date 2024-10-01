@@ -1,19 +1,10 @@
- <?php
-
+<?php
 final class AccueilController
 {
-    public $titre;
-
-    public function __construct()
-    {
-        $this->titre = "Accueil";
-    }
-
+    public static string $titre  = "gros zizi";
+    
     public function defaultAction()
     {
-        
-        Vue::montrer('accueil');
-
+        Vue::montrer("accueil", "");
     }
-
 }
