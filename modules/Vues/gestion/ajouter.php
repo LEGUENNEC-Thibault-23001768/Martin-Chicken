@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="Vues/assets/ajouter.css">
+
 <?php if (isset($A_vue['error'])): ?>
         <p style="color: red;"><?php echo $A_vue['error']; ?></p>
 <?php endif; ?>

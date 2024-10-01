@@ -41,7 +41,7 @@ final class PlatController
                         PlatModel::associerSauces($platId, $sauces);
                     }
 
-                    header('Location: index.php?ctrl=Plat&action=lister');
+                    header("Location: ?ctrl=Compte");
                     exit();
                 } else {
                     $error = 'Erreur lors de l\'ajout du plat.';
@@ -61,20 +61,19 @@ final class PlatController
         ]);
     }
 
-    public function modifierAction()
+    public function modifierAction(string $id)
     {
         $this->checkAuth();
 
-        $id = $_GET['id'] ?? $_POST['id'] ?? null;
 
         if (!$id) {
-            header('Location: index.php?ctrl=Plat&action=lister');
+            header("Location: ?ctrl=Compte");
             exit();
         }
 
         $plat = PlatModel::obtenirPlat((int) $id);
         if (!$plat) {
-            header('Location: index.php?ctrl=Plat&action=lister');
+            header("Location: ?ctrl=Compte");
             exit();
         }
 
@@ -141,7 +140,7 @@ final class PlatController
         if ($id) {
             PlatModel::supprimerPlat((int) $id);
         }
-        header('Location: index.php?ctrl=Plat&action=lister');
+        header("Location: ?ctrl=Compte");
         exit();
     }
 

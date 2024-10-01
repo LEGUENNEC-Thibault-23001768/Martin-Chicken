@@ -35,14 +35,15 @@ final class Controleur
 
 
     // Vérifie si la requête est une requête AJAX
-    public function verifAjax() {
-        return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+    public function isAjaxRequest() {
+        return !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
     }
     
     // On exécute
     public function executer()
     {
-        //fonction de rappel de notre controleur cible
+
+        //fonction de rappel de notre controleur cible (ControleurHelloworld pour notre premier exemple)
         call_user_func_array(array(new $this->_A_urlDecortique['controleur'],
             $this->_A_urlDecortique['action']), array());
 

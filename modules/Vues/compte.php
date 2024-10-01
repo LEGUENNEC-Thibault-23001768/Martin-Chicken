@@ -3,10 +3,10 @@
 <?php if (AuthModel::isLoggedIn()): ?>
     <div id="utile">
         <div id="boutonsControleur">
-            <button onclick="loadLister('Plat')">Plats</button>
-            <button onclick="loadLister('Repas')">Repas</button>
-            <button onclick="loadLister('Structure')">Structure</button>
-            <button onclick="loadLister('Tenrac')">Tenrac</button>
+            <button class="btns" onclick="loadLister('Plat')">Plats</button>
+            <button class="btns" onclick="loadLister('Repas')">Repas</button>
+            <button class="btns" onclick="loadLister('Structure')">Structure</button>
+            <button class="btns" onclick="loadLister('Tenrac')">Tenrac</button>
         </div>
         <div id="injection">
 
@@ -45,18 +45,13 @@
 <script>
     function loadLister(controller) {
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', `?ctrl=${controller}`, true);
+    xhr.open('GET', '?ctrl='+controller, true);
     xhr.onload = function () {
         if (xhr.status === 200) {
             const parser = new DOMParser();
             const doc = parser.parseFromString(xhr.responseText, 'text/html');
-
-            const h2 = doc.querySelector('h2');
-            const table = doc.querySelector('table');
-            const button = doc.querySelector('button');
-            const combinedHTML = (h2 ? h2.outerHTML : '') + 
-                     (table ? table.outerHTML : '') + 
-                     (button ? button.outerHTML : '');
+            const section = doc.querySelector('section');
+            const combinedHTML = (section ? section.outerHTML : '');
             document.getElementById('injection').innerHTML = combinedHTML;
         }
     };
@@ -64,17 +59,23 @@
     }
     function loadAjouter(controller) {
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', `?ctrl=${controller}&action=ajouter`, true);
+    xhr.open('GET', '?ctrl='+controller+'&action=ajouter', true);
     xhr.onload = function () {
         if (xhr.status === 200) {
-            document.getElementById('injection').innerHTML = xhr.responseText;
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(xhr.responseText, 'text/html');
+            const form = doc.querySelector('form');
+            const link = doc.querySelector('link');
+            const combinedHTML = (link ? link.outerHTML : '')+
+                                (form ? form.outerHTML : '');
+            document.getElementById('injection').innerHTML = combinedHTML;
         }
     };
     xhr.send();
     }
     function loadSupprimer(controller) {
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', `?ctrl=${controller}&action=supprimer`, true);
+    xhr.open('GET', '?ctrl='+controller+'&action=supprimer', true);
     xhr.onload = function () {
         if (xhr.status === 200) {
             document.getElementById('injection').innerHTML = xhr.responseText;
@@ -82,9 +83,9 @@
     };
     xhr.send();
     }
-    function loadModifier(controller) {
+    function loadModifier(controller, id) {
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', `?ctrl=${controller}&action=modifier`, true);
+    xhr.open('GET', '?ctrl='+controller+'&action=modifier&id='+id, true);
     xhr.onload = function () {
         if (xhr.status === 200) {
             document.getElementById('injection').innerHTML = xhr.responseText;

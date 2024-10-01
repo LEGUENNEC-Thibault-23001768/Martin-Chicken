@@ -11,5 +11,8 @@
          <input type="button" id="fermeBtn" class="menuBouton">
          <ul>
              <li><a href="accueil">Accueil</a></li>
+             <li><a href="Ordre">Ordre</a></li>
+             <li><a href="Tenrac">Tenrac</a></li>
+             <li><a href="Club">Club</a></li>
          </ul>
      </nav>

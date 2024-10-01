@@ -13,15 +13,8 @@ $O_controleur->executer();
 
 // Les différentes sous-vues ont été "crachées" dans le tampon d'affichage, on les récupère
 $contenuPourAffichage = Vue::recupererContenuTampon();
-
-if ($O_controleur->verifAjax()) {
-    echo "zeae";
-    
-} else {
     Vue::montrer('gabarit', [
         'body' => $contenuPourAffichage,
         'titre' => $O_controleur->getUrlDecortique()['controleur']::$titre
     ]);
-    
-}
 
