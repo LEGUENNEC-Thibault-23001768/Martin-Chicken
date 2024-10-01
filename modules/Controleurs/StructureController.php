@@ -26,6 +26,9 @@ final class StructureController
         AuthModel::checkAuth();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+                die('CSRF token validation failed');
+            }
             $type = $_POST['type'];
             $nom = $_POST['nom'];
             $adresse = $_POST['adresse'];
@@ -33,7 +36,7 @@ final class StructureController
             if ($type && $nom && $adresse) {
                 $id = StructureModel::ajouterStructure($type, $nom, $adresse);
                 if ($id) {
-                    header('Location: index.php?ctrl=Structure&action=lister');
+                    header('Location: index.php?ctrl=Login');
                     exit();
                 } else {
                     Vue::montrer('gestion/ajouter', ['onStructure' => true, 'error' => 'Erreur lors de l\'ajout de la structure.']);
@@ -58,12 +61,15 @@ final class StructureController
         }
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+                die('CSRF token validation failed');
+            }
             $nom = $_POST['nom'];
             $adresse = $_POST['adresse'];
 
             if ($nom && $adresse) {
                 if (StructureModel::modifierStructure((int)$id, $nom, $adresse)) {
-                    header('Location: index.php?ctrl=Structure&action=lister');
+                    header('Location: index.php?ctrl=Login');
                     exit();
                 } else {
                     $error = "Erreur lors de la modification de la structure.";
@@ -88,7 +94,7 @@ final class StructureController
         $id = $_GET['id'] ?? null;
         if ($id) {
             if (StructureModel::supprimerStructure((int)$id)) {
-                header('Location: index.php?ctrl=Structure&action=lister');
+                header('Location: index.php?ctrl=Login');
                 exit();
             } else {
                 echo "Erreur lors de la suppression de la structure.";

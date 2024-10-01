@@ -1,7 +1,7 @@
 <div id="cadre">
     <h2>Connection</h2>
     <form action="?ctrl=Login&action=login" method="post">
-        
+        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
         <section class="eleForm">
             <label for="username">Nom d'utilisateur</label>
             <input type="text" id="username" name="username" placeholder="Entrez votre nom d'utilisateur" required>

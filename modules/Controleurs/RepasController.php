@@ -23,6 +23,9 @@ final class RepasController
         $this->checkAuth();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+                die('CSRF token validation failed');
+            }
             $nom = $_POST['nom'] ?? '';
             $date = $_POST['date'] ?? '';
             $adresse = $_POST['adresse'] ?? '';
@@ -36,7 +39,7 @@ final class RepasController
                         RepasModel::associerPlats($repasId, $plats);
                     }
 
-                    header('Location: index.php?ctrl=Repas&action=lister');
+                    header('Location: index.php?ctrl=Login');
                     exit();
                 } else {
                     $error = 'Erreur lors de l\'ajout du repas.';
@@ -61,13 +64,13 @@ final class RepasController
         $id = $_GET['id'] ?? $_POST['id'] ?? null;
 
         if (!$id) {
-            header('Location: index.php?ctrl=Repas&action=lister');
+            header('Location: index.php?ctrl=Login');
             exit();
         }
 
         $repas = RepasModel::obtenirRepas((int) $id);
         if (!$repas) {
-            header('Location: index.php?ctrl=Repas&action=lister');
+            header('Location: index.php?ctrl=Login');
             exit();
         }
 
@@ -75,6 +78,9 @@ final class RepasController
         $success = false;
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+                die('CSRF token validation failed');
+            }
             $nom = trim($_POST['nom'] ?? '');
             $date = $_POST['date'] ?? '';
             $adresse = trim($_POST['adresse'] ?? '');
@@ -137,7 +143,7 @@ final class RepasController
         if ($id) {
             RepasModel::supprimerRepas((int) $id);
         }
-        header('Location: index.php?ctrl=Repas&action=lister');
+        header('Location: index.php?ctrl=Login');
         exit();
     }
 
@@ -158,7 +164,7 @@ final class RepasController
             $resultats = RepasModel::rechercherRepas($terme);
             Vue::montrer('gestion/rechercher', ['resultats' => $resultats, 'terme' => $terme, 'onRepas' => true]);
         } else {
-            header('Location: index.php?ctrl=Repas&action=lister');
+            header('Location: index.php?ctrl=Login');
             exit();
         }
     }

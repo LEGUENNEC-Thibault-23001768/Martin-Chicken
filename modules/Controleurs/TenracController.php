@@ -26,6 +26,9 @@ final class TenracController
         AuthModel::checkAuth();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+                die('CSRF token validation failed');
+            }
             $data = [
                 'code_personnel' => $_POST['code_personnel'],
                 'nom' => $_POST['nom'],
@@ -42,7 +45,7 @@ final class TenracController
             if ($this->validerAction($data)) {
                 $id = TenracModel::ajouterTenrac($data);
                 if ($id) {
-                    header('Location: index.php?ctrl=Tenrac&action=lister');
+                    header('Location: index.php?ctrl=Login');
                     exit();
                 } else {
                     $error = 'Erreur lors de l\'ajout du Tenrac.';
@@ -72,6 +75,9 @@ final class TenracController
         }
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+                die('CSRF token validation failed');
+            }
             $data = [
                 'code_personnel' => $_POST['code_personnel'],
                 'nom' => $_POST['nom'],
@@ -87,7 +93,7 @@ final class TenracController
 
             if ($this->validerAction($data)) {
                 if (TenracModel::modifierTenrac((int)$id, $data)) {
-                    header('Location: index.php?ctrl=Tenrac&action=lister');
+                    header('Location: index.php?ctrl=Login');
                     exit();
                 } else {
                     $error = "Erreur lors de la modification du Tenrac.";
@@ -114,7 +120,7 @@ final class TenracController
         $id = $_GET['id'] ?? null;
         if ($id) {
             if (TenracModel::supprimerTenrac((int)$id)) {
-                header('Location: index.php?ctrl=Tenrac&action=lister');
+                header('Location: index.php?ctrl=Login');
                 exit();
             } else {
                 echo "Erreur lors de la suppression du Tenrac.";
