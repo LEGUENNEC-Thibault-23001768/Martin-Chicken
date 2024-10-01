@@ -6,8 +6,8 @@ header_remove("X-Powered-By");
 header_remove("Host");
 session_start();
 
-if (!isset($_SESSION["LAST_ACTIVITY"])) {
-    $_SESSION["LAST_ACTIVITY"] = time();
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
 require 'Noyau/autoloader.php';
