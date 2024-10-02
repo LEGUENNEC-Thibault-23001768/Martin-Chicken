@@ -8,7 +8,9 @@
     padding: 0;
     box-sizing: border-box;
 }
-
+header {
+    top : 0%;
+}
 body {
     font-family: Arial, sans-serif;
     background-color: #fff;
@@ -56,6 +58,9 @@ body {
     transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
 }
 
+#pied {
+    display : none;
+}
 
 .ingredients-container {
     width: 100%;
@@ -99,7 +104,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 10; 
+    z-index: 4; 
     background-color: #582900;
     border-radius: 50px;
 }
@@ -123,25 +128,6 @@ body {
 .arrow:hover svg {
     fill: #582900; 
 }
-
-
-.footer {
-    position: absolute;
-    bottom: 10px;
-    width: 100%;
-    text-align: center;
-    font-size: 0.8rem; 
-    color: #666; 
-}
-
-.footer p {
-    font-weight: bold;  
-    color: #582900;     
-    cursor: pointer;   
-    margin: 0;
-    padding: 10px;
-}
-
 
 
 

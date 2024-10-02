@@ -23,6 +23,10 @@ final class RepasController
         $this->checkAuth();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+                die('CSRF token validation failed');
+            }
+
             $nom = $_POST['nom'] ?? '';
             $date = $_POST['date'] ?? '';
             $adresse = $_POST['adresse'] ?? '';
@@ -75,6 +79,10 @@ final class RepasController
         $success = false;
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+                die('CSRF token validation failed');
+            }
+            
             $nom = trim($_POST['nom'] ?? '');
             $date = $_POST['date'] ?? '';
             $adresse = trim($_POST['adresse'] ?? '');

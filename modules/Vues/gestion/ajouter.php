@@ -7,6 +7,7 @@
 <?php if (isset($A_vue['onPlat'])): ?>
     <h1>Ajouter un Plat</h1>
     <form action="index.php?ctrl=Plat&action=ajouter" method="POST">
+        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
         <label for="nom">Nom du plat :</label>
         <input type="text" name="nom" required><br>
 
@@ -35,6 +36,7 @@
     
 <?php if (isset($A_vue['onRepas'])): ?>
     <form action="index.php?ctrl=Repas&action=ajouter" method="POST">
+        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
         <label for="nom">Nom du repas:</label>
         <input type="text" id="nom" name="nom" required>
         
@@ -68,6 +70,7 @@
 <?php endif; ?>
 
 <form action="index.php?ctrl=Structure&action=ajouter" method="POST">
+    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
     <label for="type">Type:</label>
     <select name="type" id="type" required>
         <option value="Ordre">Ordre</option>
@@ -89,12 +92,12 @@
 
 <?php if (isset($A_vue['onTenrac'])): ?>
     <h1>Ajouter un Tenrac</h1>
-<?php var_dump($A_vue['structures']); ?>
 <?php if (isset($A_vue['error'])): ?>
     <p style="color: red;"><?php echo $A_vue['error']; ?></p>
 <?php endif; ?>
 
 <form action="index.php?ctrl=Tenrac&action=ajouter" method="POST">
+    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
     <label for="code_personnel">Code Personnel:</label>
     <input type="text" id="code_personnel" name="code_personnel" required><br>
 

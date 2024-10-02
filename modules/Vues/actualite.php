@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="assets/actualite.css">
+<link rel="stylesheet" href="Vues/assets/actualite.css">
 
 <section id="actualite" class="section-actualite">
     <div class="content-container">

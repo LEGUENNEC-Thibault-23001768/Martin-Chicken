@@ -26,6 +26,10 @@ final class StructureController
         AuthModel::checkAuth();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+                die('CSRF token validation failed');
+            }
+
             $type = $_POST['type'];
             $nom = $_POST['nom'];
             $adresse = $_POST['adresse'];
@@ -63,6 +67,9 @@ final class StructureController
         }
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+                die('CSRF token validation failed');
+            }
             $nom = trim($_POST['nom'] ?? '');
             $adresse = $_POST['adresse'] ?? [];
 

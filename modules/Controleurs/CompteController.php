@@ -18,6 +18,10 @@ final class CompteController
         if ($_SERVER['REQUEST_METHOD'] !== 'POST')
             return;
 
+        if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+            die('CSRF token validation failed');
+        }
+
         if (isset($_SESSION['login_error']))
             unset($_SESSION['login_error']);
 

@@ -26,6 +26,9 @@ final class TenracController
         AuthModel::checkAuth();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+                die('CSRF token validation failed');
+            }
             $data = [
                 'code_personnel' => $_POST['code_personnel'],
                 'nom' => $_POST['nom'],
@@ -74,6 +77,9 @@ final class TenracController
         }
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+                die('CSRF token validation failed');
+            }
             $data = [
                 'code_personnel' => $_POST['code_personnel'],
                 'nom' => $_POST['nom'],

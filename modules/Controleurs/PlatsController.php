@@ -1,5 +1,5 @@
 <?php
-final class ActualiteController
+final class PLatsController
 {
     public static string $titre = "Plats";
     

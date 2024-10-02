@@ -24,6 +24,9 @@ final class PlatController
         $this->checkAuth();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+                die('CSRF token validation failed');
+            }
             $nom = $_POST['nom'] ?? '';
             $ingredients = $_POST['ingredients'] ?? []; 
             $presence = isset($_POST['presence']);
@@ -82,6 +85,9 @@ final class PlatController
         $success = false;
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+                die('CSRF token validation failed');
+            }
             $nom = trim($_POST['nom'] ?? '');
             $ingredients = $_POST['ingredients'] ?? [];
             $sauces = $_POST['sauces'] ?? [];

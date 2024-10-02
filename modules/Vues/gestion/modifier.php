@@ -7,6 +7,7 @@
 <?php if (isset($A_vue['onPlat'])): ?>
     <?php if ($A_vue['plat']): ?>
         <form action="index.php?ctrl=Plat&action=modifier&id=<?php echo $A_vue['plat']['id']; ?>" method="POST">
+        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
         <input type="hidden" name="id" value="<?= $A_vue['plat']['id'] ?>">
 
         <label for="nom">Nom du plat:</label>
@@ -44,6 +45,7 @@
 <?php if (isset($A_vue['onRepas'])): ?>
     <?php if (isset($A_vue['repas'])): ?>
         <form action="index.php?ctrl=Repas&action=modifier&id=<?php echo $A_vue['repas']['id']; ?>" method="POST">
+            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
             <input type="hidden" name="id" value="<?= $A_vue['repas']['id'] ?>">
 
             <label for="nom">Nom du repas:</label>
@@ -97,6 +99,7 @@
 
 <?php if ($A_vue['structure']): ?>
 <form action="index.php?ctrl=Structure&action=modifier&id=<?php echo $A_vue['structure']['id']; ?>" method="POST">
+    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
     <input type="hidden" name="id" value="<?php echo $A_vue['structure']['id']; ?>">
 
     <label for="type">Type:</label>
@@ -127,6 +130,7 @@
 <?php endif; ?>
 
 <form action="index.php?ctrl=Tenrac&action=modifier&id=<?php echo $A_vue['tenrac']['id']; ?>" method="POST">
+    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
     <input type="hidden" name="id" value="<?php echo $A_vue['tenrac']['id']; ?>">
 
     <label for="code_personnel">Code Personnel:</label>

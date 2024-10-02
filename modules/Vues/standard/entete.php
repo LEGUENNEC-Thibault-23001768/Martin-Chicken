@@ -12,8 +12,6 @@
          <ul>
              <li><a href="?ctrl=Accueil">Accueil</a></li>
              <li><a href="?ctrl=Ordre">Ordre</a></li>
-             <li><a href="?ctrl=Reunion">Réunions</a></li>
-             <li><a href="?ctrl=Club">Club</a></li>
              <li><a href="?ctrl=Compte">Compte</a></li>
          </ul>
      </nav>
