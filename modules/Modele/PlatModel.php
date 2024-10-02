@@ -1,6 +1,6 @@
 <?php
 
-class PlatModel
+final class PlatModel
 {
     private static string $table = 'PLAT';
 
@@ -8,9 +8,9 @@ class PlatModel
     {
         $query = "INSERT INTO " . self::$table . " (Nom, Presence) VALUES (?, ?)";
         Connexion::execute($query, [$nom, $presence]);
-        return Connexion::lastInsertId(); // Retourne l'ID du plat nouvellement inséré
+        return Connexion::lastInsertId();
     }
-    public static function modifierPlat(int $id, string $nom): bool
+    public static function modifierPlat(int $id, string $nom): array
     {
         $query = "UPDATE " . self::$table . " SET Nom = ? WHERE Id = ?";
         return Connexion::execute($query, [$nom, $id]);

@@ -1,6 +1,6 @@
 <?php
 
-class StructureModel
+final class StructureModel
 {
     private static string $table = 'STRUCTURE';
 
@@ -11,13 +11,13 @@ class StructureModel
         return Connexion::lastInsertId();
     }
 
-    public static function modifierStructure(int $id, string $nom, string $adresse): bool
+    public static function modifierStructure(int $id, string $nom, string $adresse): array
     {
         $query = "UPDATE " . self::$table . " SET Nom = ?, Adresse = ? WHERE Id = ?";
         return Connexion::execute($query, [$nom, $adresse, $id]);
     }
 
-    public static function supprimerStructure(int $id): bool
+    public static function supprimerStructure(int $id): array
     {
         $query = "DELETE FROM " . self::$table . " WHERE Id = ?";
         return Connexion::execute($query, [$id]);

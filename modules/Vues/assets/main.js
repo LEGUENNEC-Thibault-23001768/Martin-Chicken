@@ -27,20 +27,11 @@ const handleScroll = () => {
     elements.compte.style.visibility = isScrolledHeader ? "hidden" : "visible";
 };
 
+
 elements.ouvre_btn.addEventListener('click', () => toggle_menu(true));
 elements.ferme_btn.addEventListener('click', () => toggle_menu(false));
 
 window.addEventListener('scroll', handleScroll);
 
-document.querySelectorAll('button[data-page]').forEach(button => {
-    button.addEventListener('click', function () {
-        let page = this.getAttribute('data-page');
 
-        fetch(`/modules/Vues/${page}.php`)
-            .then(response => response.text())
-            .then(html => {
-                document.getElementById('content').innerHTML = html;
-            })
-            .catch(error => console.error('Erreur lors du chargement de la page:', error));
-    });
-});
+

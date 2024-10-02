@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="Vues/assets/actions.css">
+
 <?php if (isset($A_vue['error'])): ?>
         <p style="color: red;"><?php echo $A_vue['error']; ?></p>
 <?php endif; ?>
@@ -90,7 +92,6 @@
 
 <?php if (isset($A_vue['onTenrac'])): ?>
     <h1>Ajouter un Tenrac</h1>
-<?php var_dump($A_vue['structures']); ?>
 <?php if (isset($A_vue['error'])): ?>
     <p style="color: red;"><?php echo $A_vue['error']; ?></p>
 <?php endif; ?>

@@ -1,6 +1,6 @@
 <?php
 
-class TenracModel
+final class TenracModel
 {
     private static string $table = 'TENRAC';
 
@@ -23,7 +23,7 @@ class TenracModel
         return Connexion::lastInsertId();
     }
 
-    public static function modifierTenrac(int $id, array $data): bool
+    public static function modifierTenrac(int $id, array $data): array
     {
         $query = "UPDATE " . self::$table . " SET 
                   Code_personnel = ?, Nom = ?, Email = ?, Numero = ?, Adresse = ?, 

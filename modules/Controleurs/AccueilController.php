@@ -1,9 +1,10 @@
 <?php
 final class AccueilController
 {
-    public static string $titre  = "gros zizi";
-    public function defautAction()
+    public static string $titre  = "Accueil";
+    
+    public function defaultAction()
     {
-        Vue::montrer("accueil", ""); // à modifier par le vrai accueil
+        Vue::montrer("accueil", "");
     }
 }

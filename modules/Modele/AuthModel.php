@@ -41,10 +41,8 @@ final class AuthModel
 
     public static function logout(): void
     {
-        // Unset all session variables
         $_SESSION = array();
 
-        // Destroy the session
         session_destroy();
     }
 
@@ -60,13 +58,4 @@ final class AuthModel
             exit();
         }
     }
-
-    public static function getCurrentUser(): ?array
-    {
-        if (self::isLoggedIn()) {
-            return self::findById($_SESSION['user_id']);
-        }
-        return null;
-    }
-
 }

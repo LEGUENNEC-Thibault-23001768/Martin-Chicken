@@ -2,8 +2,6 @@
 
 //namespace data\database;
 
-use PDO;
-use PDOException;
 
 define("DB_HOST", "mysql-martin-chicken.alwaysdata.net");
 define("DB_NAME", "martin-chicken_db");

@@ -16,7 +16,7 @@ final class Controleur
 
         if (empty($S_action)) {
             // L'action est vide ! On la valorise par défaut
-            $this->_A_urlDecortique['action'] = 'defautAction';
+            $this->_A_urlDecortique['action'] = 'defaultAction';
         } else {
             // On part du principe que toutes nos actions sont suffixées par 'Action'...à nous de le rajouter
             $this->_A_urlDecortique['action']  = $S_action . 'Action';
@@ -32,12 +32,6 @@ final class Controleur
         extract($data);
         require_once 'Vues/' . $view . '.php';
     }
-
-    public static function is_ajax() {
-        return !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && 
-               strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
-    }
-    
 
 
     // On exécute

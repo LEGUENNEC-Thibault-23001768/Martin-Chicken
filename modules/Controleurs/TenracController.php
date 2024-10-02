@@ -4,11 +4,11 @@ final class TenracController
 {
     public static string $titre = "Gestion des Tenracs";
 
-    public function defautAction()
+    public function defaultAction()
     {
         if (!AuthModel::isLoggedIn()) {
             header("HTTP/1.1 401 Unauthorized");
-            header("Location: /?ctrl=Login");
+            header("Location: /?ctrl=Compte");
             exit();
         }
 
@@ -42,10 +42,10 @@ final class TenracController
                 'structure_id' => $_POST['structure_id']
             ];
 
-            if ($this->validerAction($data)) {
+            if ($this->validateTenracData($data)) {
                 $id = TenracModel::ajouterTenrac($data);
                 if ($id) {
-                    header('Location: index.php?ctrl=Login');
+                    header("Location: ?ctrl=Compte");
                     exit();
                 } else {
                     $error = 'Erreur lors de l\'ajout du Tenrac.';
@@ -68,6 +68,8 @@ final class TenracController
         AuthModel::checkAuth();
 
         $id = $_GET['id'] ?? $_POST['id'] ?? null;
+        $tenrac = TenracModel::obtenirTenrac((int)$id);
+        $structures = StructureModel::listerStructures();
 
         if (!$id) {
             echo "ID du Tenrac non spécifié.";
@@ -91,20 +93,22 @@ final class TenracController
                 'structure_id' => $_POST['structure_id']
             ];
 
-            if ($this->validerAction($data)) {
-                if (TenracModel::modifierTenrac((int)$id, $data)) {
-                    header('Location: index.php?ctrl=Login');
-                    exit();
-                } else {
-                    $error = "Erreur lors de la modification du Tenrac.";
+            if ($this->validateTenracData($data)) {
+                $modifications = false;
+                
+                foreach($data as $col => $valeur) {
+                    if (($valeur === "" && $tenrac[$col] === null) || trim($valeur) != trim($tenrac[$col])) {
+                        TenracModel::modifierTenrac((int) $id, $data);
+                        $modifications = true;
+                    }
                 }
-            } else {
-                $error = "Veuillez remplir tous les champs obligatoires.";
-            }
+                if ($modifications) {
+                    header("Location: ?ctrl=Compte");
+                } else {
+                    $error = "Aucune modification n'a été effectuée.";
+                }
         }
-
-        $tenrac = TenracModel::obtenirTenrac((int)$id);
-        $structures = StructureModel::listerStructures();
+        }
         Vue::montrer('gestion/modifier', [
             'tenrac' => $tenrac,
             'structures' => $structures,
@@ -116,21 +120,17 @@ final class TenracController
     public function supprimerAction()
     {
         AuthModel::checkAuth();
-
         $id = $_GET['id'] ?? null;
-        if ($id) {
-            if (TenracModel::supprimerTenrac((int)$id)) {
-                header('Location: index.php?ctrl=Login');
-                exit();
-            } else {
-                echo "Erreur lors de la suppression du Tenrac.";
-            }
-        } else {
-            echo "ID manquant.";
+        $validation = $_GET['validation'] ?? null;
+        if ((bool) $validation === true) {
+            TenracModel::supprimerTenrac((int) $id);
+            header("Location: ?ctrl=Compte");
         }
+
+        Vue::montrer('gestion/supprimer',['id' => $id, 'onTenrac' => true]);
     }
 
-    private function validerAction(array $data): bool
+    private function validateTenracData(array $data): bool
     {
         $requiredFields = ['code_personnel', 'nom', 'email', 'grade'];
         foreach ($requiredFields as $field) {

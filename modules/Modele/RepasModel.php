@@ -1,6 +1,6 @@
 <?php
 
-class RepasModel
+final class RepasModel
 {
     private static string $table = 'REPAS';
 

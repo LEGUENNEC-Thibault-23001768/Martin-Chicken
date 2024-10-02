@@ -4,11 +4,11 @@ final class StructureController
 {
     public static string $titre = "Gestion des Structures";
 
-    public function defautAction()
+    public function defaultAction()
     {
         if (!AuthModel::isLoggedIn()) {
             header("HTTP/1.1 401 Unauthorized");
-            header("Location: /?ctrl=Login");
+            header("Location: ?ctrl=Compte");
             exit();
         }
 
@@ -29,6 +29,7 @@ final class StructureController
             if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
                 die('CSRF token validation failed');
             }
+
             $type = $_POST['type'];
             $nom = $_POST['nom'];
             $adresse = $_POST['adresse'];
@@ -36,7 +37,7 @@ final class StructureController
             if ($type && $nom && $adresse) {
                 $id = StructureModel::ajouterStructure($type, $nom, $adresse);
                 if ($id) {
-                    header('Location: index.php?ctrl=Login');
+                    header("Location: ?ctrl=Compte");
                     exit();
                 } else {
                     Vue::montrer('gestion/ajouter', ['onStructure' => true, 'error' => 'Erreur lors de l\'ajout de la structure.']);
@@ -54,32 +55,42 @@ final class StructureController
         AuthModel::checkAuth();
 
         $id = $_GET['id'] ?? $_POST['id'] ?? null;
-
+        $structure = StructureModel::obtenirStructure((int) $id);
         if (!$id) {
             echo "ID de la structure non spécifié.";
             return;
+        }
+
+        if (!$structure) {
+            header("Location: ?ctrl=Compte");
+            exit();
         }
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
                 die('CSRF token validation failed');
             }
-            $nom = $_POST['nom'];
-            $adresse = $_POST['adresse'];
+            $nom = trim($_POST['nom'] ?? '');
+            $adresse = $_POST['adresse'] ?? [];
 
-            if ($nom && $adresse) {
-                if (StructureModel::modifierStructure((int)$id, $nom, $adresse)) {
-                    header('Location: index.php?ctrl=Login');
-                    exit();
-                } else {
-                    $error = "Erreur lors de la modification de la structure.";
-                }
-            } else {
-                $error = "Veuillez remplir tous les champs.";
+            $modifications = false;
+
+            if ($nom !== '' && $nom !== $structure['nom']) {
+                StructureModel::modifierStructure((int) $id, $nom, $adresse);
+                $modifications = true;
             }
-        }
 
-        $structure = StructureModel::obtenirStructure((int)$id);
+            if ($adresse !== '' && $adresse !== $structure['adresse']) {
+                StructureModel::modifierStructure((int) $id, $nom, $adresse);
+                $modifications = true;
+            }
+
+            if ($modifications) {
+                header("Location: ?ctrl=Compte");
+            } else {
+                $error = "Aucune modification n'a été effectuée.";
+            }
+    }
         Vue::montrer('gestion/modifier', [
             'structure' => $structure,
             'onStructure' => true,
@@ -90,17 +101,13 @@ final class StructureController
     public function supprimerAction()
     {
         AuthModel::checkAuth();
-
         $id = $_GET['id'] ?? null;
-        if ($id) {
-            if (StructureModel::supprimerStructure((int)$id)) {
-                header('Location: index.php?ctrl=Login');
-                exit();
-            } else {
-                echo "Erreur lors de la suppression de la structure.";
-            }
-        } else {
-            echo "ID manquant.";
+        $validation = $_GET['validation'] ?? null;
+        if ((bool) $validation === true) {
+            StructureModel::supprimerStructure((int) $id);
+            header("Location: ?ctrl=Compte");
         }
+
+        Vue::montrer('gestion/supprimer',['id' => $id, 'onStructure' => true]);
     }
 }

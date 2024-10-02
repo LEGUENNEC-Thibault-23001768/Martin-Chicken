@@ -1,4 +1,5 @@
 <?php 
+
 final class PlatController
 {
     public static string $titre = "Gestion des Plats";
@@ -7,12 +8,12 @@ final class PlatController
     {
         if (!AuthModel::isLoggedIn()) {
             header("HTTP/1.1 401 Unauthorized");
-            header("Location: /?ctrl=Login");
+            header("Location: /?ctrl=Compte");
             exit();
         }
     }
 
-    public function defautAction()
+    public function defaultAction()
     {
         $this->checkAuth();
         $this->listerAction();
@@ -26,7 +27,6 @@ final class PlatController
             if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
                 die('CSRF token validation failed');
             }
-
             $nom = $_POST['nom'] ?? '';
             $ingredients = $_POST['ingredients'] ?? []; 
             $presence = isset($_POST['presence']);
@@ -44,7 +44,7 @@ final class PlatController
                         PlatModel::associerSauces($platId, $sauces);
                     }
 
-                    header('Location: index.php?ctrl=Login');
+                    header("Location: ?ctrl=Compte");
                     exit();
                 } else {
                     $error = 'Erreur lors de l\'ajout du plat.';
@@ -71,13 +71,13 @@ final class PlatController
         $id = $_GET['id'] ?? $_POST['id'] ?? null;
 
         if (!$id) {
-            header('Location: index.php?ctrl=Login');
+            header("Location: ?ctrl=Compte");
             exit();
         }
 
         $plat = PlatModel::obtenirPlat((int) $id);
         if (!$plat) {
-            header('Location: index.php?ctrl=Login');
+            header("Location: ?ctrl=Compte");
             exit();
         }
 
@@ -116,7 +116,8 @@ final class PlatController
 
             if ($modifications) {
                 $success = true;
-                $plat = PlatModel::obtenirPlat((int) $id); // Recharger les données du plat
+                $plat = PlatModel::obtenirPlat((int) $id);
+                header("Location: ?ctrl=Compte");
             } else {
                 $error = "Aucune modification n'a été effectuée.";
             }
@@ -142,13 +143,14 @@ final class PlatController
     public function supprimerAction()
     {
         $this->checkAuth();
-
         $id = $_GET['id'] ?? null;
-        if ($id) {
+        $validation = $_GET['validation'] ?? null;
+        if ((bool) $validation === true) {
             PlatModel::supprimerPlat((int) $id);
+            header("Location: ?ctrl=Compte");
         }
-        header('Location: index.php?ctrl=Login');
-        exit();
+
+        Vue::montrer('gestion/supprimer',['id' => $id, 'onPlat' => true]);
     }
 
     public function listerAction()
