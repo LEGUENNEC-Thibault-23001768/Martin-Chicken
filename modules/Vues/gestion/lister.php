@@ -34,8 +34,8 @@
                         <p>Plats : <?php echo htmlspecialchars($r['plats'] ?? 'Aucun plat associé'); ?></p>
                     </section>
                     <section class="actions">
-                        <button class="boutonAction" onclick="loadModifier('Plat', <?= $plat['id'] ?>)">Modifier</button>
-                        <button class="boutonAction" onclick="loadSupprimer('Plat', <?= $plat['id'] ?>)">Supprimer</button>
+                        <button class="boutonAction" onclick="loadModifier('Repas', <?= $r['id'] ?>)">Modifier</button>
+                        <button class="boutonAction" onclick="loadSupprimer('Repas', <?= $r['id'] ?>)">Supprimer</button>
                     </section>
                 </div>
             <?php endforeach; ?>
@@ -48,17 +48,17 @@
 
 <?php if (isset($A_vue['onStructure'])): ?>
     <section class="cards">
-        <?php foreach ($A_vue['structures'] as $tenrac): ?>
+        <?php foreach ($A_vue['structures'] as $structure): ?>
             <div class="card">
                 <section class="contenu">
-                    <p>Type : <?php echo htmlspecialchars($tenrac['type']); ?></p>
-                    <p>Nom : <?php echo htmlspecialchars($tenrac['nom']); ?></p>
-                    <p>Adresse : <?php echo htmlspecialchars($tenrac['adresse']); ?></p>
+                    <p>Type : <?php echo htmlspecialchars($structure['type']); ?></p>
+                    <p>Nom : <?php echo htmlspecialchars($structure['nom']); ?></p>
+                    <p>Adresse : <?php echo htmlspecialchars($structure['adresse']); ?></p>
                 </section>
                 <section class="actions">
-                    <button class="boutonAction" onclick="loadModifier('Structure', <?= $tenrac['id'] ?>)">Modifier</button>
-                    <?php if ($tenrac['type'] === 'Club'): ?>
-                        <button class="boutonAction" onclick="loadSupprimer('Structure', <?= $tenrac['id'] ?>)">Supprimer</button>
+                    <button class="boutonAction" onclick="loadModifier('Structure', <?= $structure['id'] ?>)">Modifier</button>
+                    <?php if ($structure['type'] === 'Club'): ?>
+                        <button class="boutonAction" onclick="loadSupprimer('Structure', <?= $structure['id'] ?>)">Supprimer</button>
                     <?php endif; ?>
                 </section>
             </div>
@@ -85,7 +85,7 @@
                 </section>
             </div>
         <?php endforeach; ?>
-        <button class="boutonAdd" onclick="loadAjouter('Structure')">+</button>
+        <button class="boutonAdd" onclick="loadAjouter('Tenrac')">+</button>
     </section>
 
     <?php endif; ?>

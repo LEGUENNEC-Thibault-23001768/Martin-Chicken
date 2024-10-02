@@ -8,7 +8,7 @@ final class StructureController
     {
         if (!AuthModel::isLoggedIn()) {
             header("HTTP/1.1 401 Unauthorized");
-            header("Location: /?ctrl=Login");
+            header("Location: ?ctrl=Compte");
             exit();
         }
 
@@ -33,7 +33,7 @@ final class StructureController
             if ($type && $nom && $adresse) {
                 $id = StructureModel::ajouterStructure($type, $nom, $adresse);
                 if ($id) {
-                    header('Location: index.php?ctrl=Structure&action=lister');
+                    header("Location: ?ctrl=Compte");
                     exit();
                 } else {
                     Vue::montrer('gestion/ajouter', ['onStructure' => true, 'error' => 'Erreur lors de l\'ajout de la structure.']);
@@ -51,29 +51,39 @@ final class StructureController
         AuthModel::checkAuth();
 
         $id = $_GET['id'] ?? $_POST['id'] ?? null;
-
+        $structure = StructureModel::obtenirStructure((int) $id);
         if (!$id) {
             echo "ID de la structure non spécifié.";
             return;
         }
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $nom = $_POST['nom'];
-            $adresse = $_POST['adresse'];
-
-            if ($nom && $adresse) {
-                if (StructureModel::modifierStructure((int)$id, $nom, $adresse)) {
-                    header('Location: index.php?ctrl=Structure&action=lister');
-                    exit();
-                } else {
-                    $error = "Erreur lors de la modification de la structure.";
-                }
-            } else {
-                $error = "Veuillez remplir tous les champs.";
-            }
+        if (!$structure) {
+            header("Location: ?ctrl=Compte");
+            exit();
         }
 
-        $structure = StructureModel::obtenirStructure((int)$id);
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $nom = trim($_POST['nom'] ?? '');
+            $adresse = $_POST['adresse'] ?? [];
+
+            $modifications = false;
+
+            if ($nom !== '' && $nom !== $structure['nom']) {
+                StructureModel::modifierStructure((int) $id, $nom, $adresse);
+                $modifications = true;
+            }
+
+            if ($adresse !== '' && $adresse !== $structure['adresse']) {
+                StructureModel::modifierStructure((int) $id, $nom, $adresse);
+                $modifications = true;
+            }
+
+            if ($modifications) {
+                header("Location: ?ctrl=Compte");
+            } else {
+                $error = "Aucune modification n'a été effectuée.";
+            }
+    }
         Vue::montrer('gestion/modifier', [
             'structure' => $structure,
             'onStructure' => true,
@@ -84,17 +94,13 @@ final class StructureController
     public function supprimerAction()
     {
         AuthModel::checkAuth();
-
         $id = $_GET['id'] ?? null;
-        if ($id) {
-            if (StructureModel::supprimerStructure((int)$id)) {
-                header('Location: index.php?ctrl=Structure&action=lister');
-                exit();
-            } else {
-                echo "Erreur lors de la suppression de la structure.";
-            }
-        } else {
-            echo "ID manquant.";
+        $validation = $_GET['validation'] ?? null;
+        if ((bool) $validation === true) {
+            StructureModel::supprimerStructure((int) $id);
+            header("Location: ?ctrl=Compte");
         }
+
+        Vue::montrer('gestion/supprimer',['id' => $id, 'onStructure' => true]);
     }
 }

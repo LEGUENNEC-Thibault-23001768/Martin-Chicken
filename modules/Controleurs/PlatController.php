@@ -61,10 +61,11 @@ final class PlatController
         ]);
     }
 
-    public function modifierAction(string $id)
+    public function modifierAction()
     {
         $this->checkAuth();
 
+        $id = $_GET['id'] ?? $_POST['id'] ?? null;
 
         if (!$id) {
             header("Location: ?ctrl=Compte");
@@ -109,7 +110,8 @@ final class PlatController
 
             if ($modifications) {
                 $success = true;
-                $plat = PlatModel::obtenirPlat((int) $id); // Recharger les données du plat
+                $plat = PlatModel::obtenirPlat((int) $id);
+                header("Location: ?ctrl=Compte");
             } else {
                 $error = "Aucune modification n'a été effectuée.";
             }
@@ -135,13 +137,14 @@ final class PlatController
     public function supprimerAction()
     {
         $this->checkAuth();
-
         $id = $_GET['id'] ?? null;
-        if ($id) {
+        $validation = $_GET['validation'] ?? null;
+        if ((bool) $validation === true) {
             PlatModel::supprimerPlat((int) $id);
+            header("Location: ?ctrl=Compte");
         }
-        header("Location: ?ctrl=Compte");
-        exit();
+
+        Vue::montrer('gestion/supprimer',['id' => $id, 'onPlat' => true]);
     }
 
     public function listerAction()

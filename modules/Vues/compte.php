@@ -65,18 +65,26 @@
             const parser = new DOMParser();
             const doc = parser.parseFromString(xhr.responseText, 'text/html');
             const form = doc.querySelector('form');
-            const combinedHTML = (form ? form.outerHTML : '');
-            document.getElementById('injection').innerHTML = xhr.responseText;
+            const link = doc.querySelector('link');
+            const combinedHTML = (link ? link.outerHTML : '')+
+                                (form ? form.outerHTML : '');
+            document.getElementById('injection').innerHTML = combinedHTML;
         }
     };
     xhr.send();
     }
-    function loadSupprimer(controller) {
+    function loadSupprimer(controller, id) {
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', '?ctrl='+controller+'&action=supprimer', true);
+    xhr.open('GET', '?ctrl='+controller+'&action=supprimer&id='+id, true);
     xhr.onload = function () {
         if (xhr.status === 200) {
-            document.getElementById('injection').innerHTML = xhr.responseText;
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(xhr.responseText, 'text/html');
+            const div = doc.querySelector('div');
+            const link = doc.querySelector('link');
+            const combinedHTML = (link ? link.outerHTML : '')+
+                                (div ? div.outerHTML : '');
+            document.getElementById('injection').innerHTML = combinedHTML;
         }
     };
     xhr.send();
@@ -86,7 +94,13 @@
     xhr.open('GET', '?ctrl='+controller+'&action=modifier&id='+id, true);
     xhr.onload = function () {
         if (xhr.status === 200) {
-            document.getElementById('injection').innerHTML = xhr.responseText;
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(xhr.responseText, 'text/html');
+            const form = doc.querySelector('form');
+            const link = doc.querySelector('link');
+            const combinedHTML = (link ? link.outerHTML : '')+
+                                (form ? form.outerHTML : '');
+            document.getElementById('injection').innerHTML = combinedHTML;
         }
     };
     xhr.send();
