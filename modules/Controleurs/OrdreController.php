@@ -2,12 +2,7 @@
 
 final class OrdreController
 {
-    public $titre;
-
-    public function __construct()
-    {
-        $this->titre = "l'Ordre";
-    }
+    public static string $titre = "Ordre";
 
     public function defaultAction()
     {

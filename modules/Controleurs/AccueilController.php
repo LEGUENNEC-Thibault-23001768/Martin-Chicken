@@ -1,7 +1,7 @@
 <?php
 final class AccueilController
 {
-    public static string $titre  = "gros zizi";
+    public static string $titre  = "Accueil";
     
     public function defaultAction()
     {

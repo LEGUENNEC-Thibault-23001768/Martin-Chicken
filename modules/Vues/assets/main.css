@@ -8,6 +8,7 @@ html{
 body {
   margin: 0;
   background-color: #361a0a;
+  width: 100%;
 }
 body.ouvert {
   overflow-y: hidden;
@@ -60,7 +61,7 @@ header:hover #compte img {
   cursor: pointer;
   top: 0%;
   height: 10%;
-  width: 9%;
+  width: 150px;
   left: 44.5%;
   right: 37%;
   z-index: 7;
@@ -198,4 +199,95 @@ header:hover #compte img {
     color: rgb(255, 66, 52);
 }
 
-  
+@media (max-width: 480px) {
+  header {
+    max-width: 480px;
+  }
+
+  header img {
+    width: auto;
+  }
+  #compte {
+      display: none;
+  }
+
+  #ordre {
+    display: none;
+  }
+
+  #logo {
+      width: 80px;
+      left : 70%;
+  }
+
+  .menu ul {
+    padding-left: 130px;
+  }
+
+  #fermeBtn {
+    left : 85%;
+  }
+  #pied {
+      font-size: 0.8rem;
+      flex-direction: column;
+      text-align: center;
+  }
+
+  #pied section {
+      margin: 10px 0;
+  }
+}
+
+@media (min-width: 480px) and (max-width: 768px) {
+  header {
+      max-width: 768px;
+  }
+
+  .headMenu {
+      font-size: 1.4rem;
+  }
+
+  #compte {
+    display : none;
+  }
+
+  #ordre {
+    display: none;
+  }
+
+  #logo {
+    left : 70%;
+    width: 125px;
+}
+
+  .menu ul {
+    padding-left: 230px;
+    transform: translate(10%,50%);
+  }
+
+  #fermeBtn {
+    left : 90%;
+  }
+  #pied {
+      flex-direction: column;
+      text-align: center;
+  }
+
+  #pied section {
+      margin: 10px 0;
+  }
+}
+
+@media (min-width: 1200px) {
+  header {
+      min-width: 1200px;
+  }
+
+  #logo {
+      width: 150px;
+  }
+
+  #pied {
+      font-size: 1.2rem;
+  }
+}

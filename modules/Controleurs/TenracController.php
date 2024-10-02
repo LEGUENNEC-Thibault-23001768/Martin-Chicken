@@ -8,7 +8,7 @@ final class TenracController
     {
         if (!AuthModel::isLoggedIn()) {
             header("HTTP/1.1 401 Unauthorized");
-            header("Location: /?ctrl=Login");
+            header("Location: /?ctrl=Compte");
             exit();
         }
 

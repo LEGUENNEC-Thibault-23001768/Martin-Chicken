@@ -7,15 +7,15 @@ body {
     padding: 0;
 }
 
-h1 {
+header {
     text-align: center;
     padding: 20px;
+    background-color: #fff7da;
     color: #582900;
-    font-size: 24px;
-    margin: 20px 0;
+    font-size: 12px;
 }
 
-.club-container {
+.event-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
@@ -24,7 +24,7 @@ h1 {
     margin: 0 auto;
 }
 
-.club-card {
+.event-card {
     background-color: #f8f8f8;
     border: 2px solid #582900;
     padding: 20px;
@@ -33,25 +33,19 @@ h1 {
     transition: transform 0.3s ease;
 }
 
-.club-card h2 {
+.event-card h2 {
     color: #582900;
     font-size: 20px;
     margin-bottom: 10px;
 }
 
-.club-card p {
+.event-card p {
     font-size: 16px;
     margin: 5px 0;
 }
 
-.club-card:hover {
+.event-card:hover {
     transform: scale(1.05);
-}
-
-.club-details {
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px solid #582900;
 }
 
 footer {
@@ -63,7 +57,7 @@ footer {
 }
 
 @media (max-width: 768px) {
-    .club-container {
+    .event-container {
         grid-template-columns: 1fr;
     }
 }

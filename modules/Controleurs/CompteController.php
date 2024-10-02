@@ -1,7 +1,7 @@
 <?php
 final class CompteController
 {
-    public static string $titre  = "Connexion";
+    public static string $titre  = "Compte";
     public function defaultAction()
     {
         if (AuthModel::isLoggedIn()) {

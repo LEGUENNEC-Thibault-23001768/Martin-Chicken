@@ -34,11 +34,6 @@ final class Controleur
     }
 
 
-    // Vérifie si la requête est une requête AJAX
-    public function isAjaxRequest() {
-        return !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
-    }
-    
     // On exécute
     public function executer()
     {
