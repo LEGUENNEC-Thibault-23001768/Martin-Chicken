@@ -1,4 +1,0 @@
-<?php
-
-const SOURCE_DIRECTORY = __DIR__ . '\\';
-const PASSWORD_HASH_ALGORITHM = PASSWORD_DEFAULT;
